@@ -1,0 +1,715 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Wave–Particle Duality Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: title band, station tabs, then each station = darkroom stage (canvas) beside an instrument panel; stacks on phones */
+:root{
+  --bg:#eef1f5; --surface:#ffffff; --surface-2:#f6f8fb; --ink:#141a26; --muted:#566074; --line:#d5dbe5;
+  --accent:#0d7686; --accent-soft:#d9eff2; --accent-ink:#ffffff;
+  --good:#17804a; --good-soft:#dcf2e4; --bad:#b4410f; --bad-soft:#fbe6dc;
+  --stage:#090e1a; --stage-line:#26304a;
+  --font-display:"Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e131d; --surface:#161d2a; --surface-2:#1b2333; --ink:#e7ecf4; --muted:#9aa6ba; --line:#2a3447;
+  --accent:#4cc3d2; --accent-soft:#163940; --accent-ink:#06181c;
+  --good:#5fd394; --good-soft:#163526; --bad:#ff9a6a; --bad-soft:#3d2219; color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#0e131d; --surface:#161d2a; --surface-2:#1b2333; --ink:#e7ecf4; --muted:#9aa6ba; --line:#2a3447;
+  --accent:#4cc3d2; --accent-soft:#163940; --accent-ink:#06181c;
+  --good:#5fd394; --good-soft:#163526; --bad:#ff9a6a; --bad-soft:#3d2219; color-scheme:dark; }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:15px; line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:24px 48px}
+.wrap{max-width:1180px; margin:0 auto; display:flex; flex-direction:column; gap:20px}
+h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0; letter-spacing:-0.01em}
+h1{font-size:clamp(1.7rem, 3.6vw, 2.4rem); font-weight:700}
+h2{font-size:1.35rem; font-weight:600}
+h3{font-size:1rem; font-weight:600}
+p{margin:0}
+.eyebrow{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+header{display:flex; flex-direction:column; gap:8px}
+header .lede{color:var(--muted); max-width:68ch}
+.ideas{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.idea{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; min-width:0}
+.idea b{font-family:var(--font-display); font-weight:600}
+.idea span{color:var(--muted); font-size:.9rem}
+
+.tabs{display:flex; gap:6px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:0}
+.tab{appearance:none; border:1px solid transparent; border-bottom:none; background:none; color:var(--muted); font:600 .95rem var(--font-display);
+  padding:10px 14px; border-radius:8px 8px 0 0; cursor:pointer; display:flex; gap:8px; align-items:baseline; margin-bottom:-1px}
+.tab small{font-family:var(--font-mono); font-weight:400; font-size:.72rem}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--surface); color:var(--ink); border-color:var(--line)}
+.tab:focus-visible, button:focus-visible, input:focus-visible, label:focus-within{outline:2px solid var(--accent); outline-offset:2px}
+
+.station{display:flex; flex-direction:column; gap:16px}
+.station-head{display:flex; flex-direction:column; gap:6px; max-width:75ch}
+.station-head p{color:var(--muted)}
+.lab{display:grid; grid-template-columns:minmax(0, 1.75fr) minmax(0, 1fr); gap:16px; align-items:start}
+.stage{background:var(--stage); border-radius:12px; overflow:hidden; border:1px solid var(--stage-line); position:relative}
+.stage canvas{display:block; width:100%; height:auto; aspect-ratio:800/460; max-width:100%}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:16px; min-width:0}
+.ctl{display:flex; flex-direction:column; gap:6px}
+.ctl > .lbl{font-size:.78rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; display:flex; justify-content:space-between; gap:8px}
+.ctl > .lbl output{font-family:var(--font-mono); text-transform:none; letter-spacing:0; color:var(--ink); font-weight:600}
+.seg{display:flex; background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:3px; gap:3px; flex-wrap:wrap}
+.seg button{flex:1 1 0; min-width:max-content; appearance:none; border:none; background:none; color:var(--muted); font:500 .86rem var(--font-body); padding:7px 8px; border-radius:6px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.12); font-weight:600}
+input[type=range]{width:100%; accent-color:var(--accent)}
+.check{display:flex; gap:10px; align-items:flex-start; font-size:.9rem; cursor:pointer; border-radius:6px}
+.check input{margin-top:3px; accent-color:var(--accent); width:16px; height:16px; flex:none}
+.btns{display:flex; flex-wrap:wrap; gap:8px}
+.btn{appearance:none; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); font:600 .86rem var(--font-body); padding:8px 12px; border-radius:8px; cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.readouts{display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:.88rem; margin:0}
+.readouts dt{color:var(--muted)}
+.readouts dd{margin:0; font-family:var(--font-mono); font-variant-numeric:tabular-nums; text-align:right; font-weight:600}
+.note{background:var(--accent-soft); border-radius:8px; padding:10px 12px; font-size:.9rem}
+.note b{font-weight:600}
+.chip{display:inline-flex; align-items:center; gap:6px; font:600 .82rem var(--font-body); padding:4px 10px; border-radius:999px; width:max-content; max-width:100%}
+.chip::before{content:""; width:8px; height:8px; border-radius:50%; background:currentColor}
+.chip.good{background:var(--good-soft); color:var(--good)}
+.chip.bad{background:var(--bad-soft); color:var(--bad)}
+.disabled-note{font-size:.8rem; color:var(--muted)}
+
+.spec{position:relative; height:12px; border-radius:6px; margin-top:2px}
+.spec-labels{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:.68rem; color:var(--muted); position:relative}
+.threshold{position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--ink)}
+.threshold span{position:absolute; top:-18px; left:50%; transform:translateX(-50%); font:600 .66rem var(--font-mono); white-space:nowrap; color:var(--ink)}
+
+.ebars{display:flex; flex-direction:column; gap:8px}
+.ebar{display:flex; flex-direction:column; gap:3px}
+.ebar .t{display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; font-size:.8rem; color:var(--muted)}
+.ebar .t b{font-family:var(--font-mono); color:var(--ink)}
+.track{height:12px; background:var(--surface-2); border:1px solid var(--line); border-radius:6px; position:relative; overflow:hidden}
+.fill{position:absolute; inset:0 auto 0 0; border-radius:5px}
+.need{position:absolute; top:0; bottom:0; width:2px; background:var(--bad)}
+
+.lower{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:12px; min-width:0}
+.tasks{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+.q{display:flex; flex-direction:column; gap:8px; padding-top:12px; border-top:1px solid var(--line)}
+.q:first-of-type{border-top:none; padding-top:0}
+.q p{font-weight:500}
+.opts{display:flex; flex-direction:column; gap:6px}
+.opt{appearance:none; text-align:left; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); font:400 .9rem var(--font-body); padding:8px 10px; border-radius:8px; cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.right{border-color:var(--good); background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad); background:var(--bad-soft)}
+.fb{font-size:.88rem}
+.fb.good{color:var(--good)} .fb.bad{color:var(--bad)}
+footer{color:var(--muted); font-size:.82rem}
+
+@media (max-width: 900px){ .lab, .lower{grid-template-columns:1fr} }
+@media (max-width: 560px){ .ideas{grid-template-columns:1fr} .tab small{display:none} }
+.swatch{height:44px; border-radius:8px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font:600 .9rem var(--font-display); transition:background .2s}
+.meter-row{display:flex; justify-content:space-between; font-size:.85rem; color:var(--muted)}
+.meter-row b{color:var(--ink)}
+.explain{gap:14px}
+.explain h3{margin-top:4px}
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.compare .col{background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; min-width:0}
+.compare ul, .steps{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:8px}
+.tag{font:600 .75rem var(--font-body); text-transform:uppercase; letter-spacing:.06em; color:var(--bad)}
+.tag.good{color:var(--good)}
+.steps{max-width:80ch}
+.analogy{background:var(--accent-soft); border-radius:8px; padding:12px 14px; max-width:80ch}
+.takeaway{max-width:80ch}
+@media (max-width: 700px){ .compare{grid-template-columns:1fr} }
+.topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
+.fs-btn{display:inline-flex; align-items:center; gap:8px}
+.fs-btn svg{width:16px; height:16px}
+:fullscreen{overflow-y:auto; background:var(--bg)}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="topbar"><div class="eyebrow">Chemistry I · Unit 3 · Learning Goal 3.1</div><button class="btn fs-btn" id="fs-btn" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Full screen</span></button></div>
+    <h1>Wave–Particle Duality Lab</h1>
+    <p class="lede">Light and electrons can act like waves and like particles. Try three experiments to see both.</p>
+    <div class="ideas">
+      <div class="idea"><b>Acts like a wave</b><span>Spreads out and can interfere: waves can add up or cancel out.</span></div>
+      <div class="idea"><b>Acts like a particle</b><span>Arrives in single pieces. A piece of light is called a photon.</span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Experiments">
+    <button class="tab" role="tab" id="tab-interference" data-station="interference" aria-selected="true"><small>1</small>Interference</button>
+    <button class="tab" role="tab" id="tab-double-slit" data-station="double-slit" aria-selected="false"><small>2</small>Double Slit</button>
+    <button class="tab" role="tab" id="tab-photoelectric" data-station="photoelectric" aria-selected="false"><small>3</small>Photoelectric Effect</button>
+    <button class="tab" role="tab" id="tab-observer" data-station="observer" aria-selected="false"><small>4</small>Observer Effect</button>
+  </nav>
+
+  <!-- STATION 1: INTERFERENCE -->
+  <section class="station" id="st-interference" role="tabpanel" aria-labelledby="tab-interference">
+    <div class="station-head">
+      <h2>Experiment 1: When two waves meet</h2>
+      <p>Two waves of light overlap. Slide wave B to change how they line up, then watch the combined wave at the bottom.</p>
+    </div>
+    <div class="lab">
+      <div class="stage"><canvas id="c0" width="800" height="460" aria-label="Two waves and their combined wave"></canvas></div>
+      <div class="panel">
+        <div class="ctl"><span class="lbl">Quick set</span>
+          <div class="seg" id="i-quick"><button data-v="0" aria-pressed="true">Crest meets crest</button><button data-v="0.5" aria-pressed="false">Crest meets trough</button></div>
+        </div>
+        <div class="ctl"><label class="lbl" for="i-shift">Slide wave B</label>
+          <input type="range" id="i-shift" min="0" max="1" step="0.01" value="0">
+        </div>
+        <span class="chip good" id="i-chip">Constructive interference</span>
+        <div class="ctl"><span class="lbl">What you would see</span>
+          <div class="swatch" id="i-swatch">Bright</div>
+        </div>
+        <div class="note" id="i-note"></div>
+      </div>
+    </div>
+    <div class="lower">
+      <div class="card"><h3>Try this</h3><ul class="tasks" id="tasks-1"></ul></div>
+      <div class="card"><h3>Check yourself</h3><div id="quiz-1"></div></div>
+    </div>
+  </section>
+
+  <!-- STATION 2: DOUBLE SLIT -->
+  <section class="station" id="st-double-slit" role="tabpanel" aria-labelledby="tab-double-slit" hidden>
+    <div class="station-head">
+      <h2>Experiment 2: The double slit</h2>
+      <p>Shine light at a wall with two narrow slits. The light spreads out from each slit like ripples in water. The two sets of ripples overlap and interfere, making a pattern on the screen.</p>
+    </div>
+    <div class="lab">
+      <div class="stage"><canvas id="c1" width="800" height="460" aria-label="Light waves passing through two slits and making stripes"></canvas></div>
+      <div class="panel">
+        <div class="ctl"><span class="lbl">Send through</span>
+          <div class="seg" data-key="source"><button data-v="light" aria-pressed="true">Light</button><button data-v="electrons" aria-pressed="false">Electrons</button></div>
+        </div>
+        <div class="ctl"><span class="lbl">Slits</span>
+          <div class="seg" data-key="slits"><button data-v="both" aria-pressed="true">Both open</button><button data-v="top" aria-pressed="false">One open</button></div>
+        </div>
+        <div class="note" id="s1-note"></div>
+      </div>
+    </div>
+    <div class="lower">
+      <div class="card"><h3>Try this</h3><ul class="tasks" id="tasks-2"></ul></div>
+      <div class="card"><h3>Check yourself</h3><div id="quiz-2"></div></div>
+    </div>
+  </section>
+
+  <!-- STATION 3: PHOTOELECTRIC -->
+  <section class="station" id="st-photoelectric" role="tabpanel" aria-labelledby="tab-photoelectric" hidden>
+    <div class="station-head">
+      <h2>Experiment 3: The photoelectric effect</h2>
+      <p>Scientists found that light shining on a metal can knock electrons out of it. The surprise was <i>which</i> light works. Test the colors and brightness, then read what's going on below.</p>
+    </div>
+    <div class="lab">
+      <div class="stage"><canvas id="c2" width="800" height="460" aria-label="Photoelectric effect simulation"></canvas></div>
+      <div class="panel">
+        <div class="ctl"><label class="lbl" for="s2-nm">Color of light <output id="s2-nm-out">Green · 550 nm</output></label>
+          <input type="range" id="s2-nm" min="250" max="800" step="5" value="550">
+          <div class="spec" id="s2-spec"></div>
+          <div class="spec-labels"><span>Ultraviolet</span><span>Visible</span><span>Infrared</span></div>
+        </div>
+        <div class="ctl"><label class="lbl" for="s2-br">Brightness <output id="s2-br-out">50%</output></label>
+          <input type="range" id="s2-br" min="0" max="100" step="5" value="50">
+        </div>
+        <span class="chip good" id="s2-chip">Electrons knocked out</span>
+        <div class="ebar"><div class="t"><span>Energy in one photon</span></div>
+          <div class="track"><div class="fill" id="s2-fill"></div><div class="need" id="s2-need"></div></div>
+          <div class="meter-row"><span>Red line = energy needed to free an electron</span></div></div>
+        <div class="meter-row"><span>Electron speed</span><b id="s2-v">—</b></div>
+        <div class="note" id="s2-note"></div>
+      </div>
+    </div>
+
+    <div class="card explain">
+      <h3>What's going on?</h3>
+      <div class="compare">
+        <div class="col">
+          <span class="tag">If light were only a wave</span>
+          <ul>
+            <li>Brighter light carries more energy, so <b>any color</b> should knock out electrons if it's bright enough.</li>
+            <li>Dim light would need time to “build up” energy before electrons come out.</li>
+          </ul>
+        </div>
+        <div class="col">
+          <span class="tag good">What actually happens</span>
+          <ul>
+            <li>Red light <b>never</b> knocks out electrons, no matter how bright.</li>
+            <li>Violet and UV light knock out electrons <b>right away</b>, even when dim.</li>
+          </ul>
+        </div>
+      </div>
+      <h3>How photons explain it</h3>
+      <ol class="steps">
+        <li><b>Light comes in tiny packets called photons.</b> Each photon carries a set amount of energy, called a quantum.</li>
+        <li><b>The color decides how much energy each photon has.</b> Shorter wavelength (violet, UV) = more energy. Longer wavelength (red, infrared) = less energy.</li>
+        <li><b>One photon hits one electron.</b> If that photon has enough energy, the electron breaks free. If it doesn't, nothing happens. The electron can't save up energy from several weak photons.</li>
+        <li><b>Brightness is the number of photons.</b> Brighter light sends more photons, so more electrons come out. It doesn't make each photon stronger.</li>
+        <li><b>Extra energy becomes speed.</b> A photon with more energy than needed sends the electron flying off faster.</li>
+      </ol>
+      <div class="analogy"><b>Think of it like this:</b> You're trying to knock a can off a fence. Throwing a thousand ping-pong balls (red photons) won't do it, because each one is too weak. One baseball (a violet photon) knocks it right off. Throwing more baseballs knocks off more cans.</div>
+      <p class="takeaway"><b>Why it matters:</b> Interference shows light acts like a <b>wave</b>. The photoelectric effect shows light acts like a <b>particle</b>. Light does both. That is wave-particle duality.</p>
+    </div>
+
+    <div class="lower">
+      <div class="card"><h3>Try this</h3><ul class="tasks" id="tasks-3"></ul></div>
+      <div class="card"><h3>Check yourself</h3><div id="quiz-3"></div></div>
+    </div>
+  </section>
+
+  <!-- STATION 4: OBSERVER EFFECT -->
+  <section class="station" id="st-observer" role="tabpanel" aria-labelledby="tab-observer" hidden>
+    <div class="station-head">
+      <h2>Experiment 4: The observer effect</h2>
+      <p>Now fire photons or electrons at the two slits <b>one at a time</b>. Each one lands on the screen as a single dot. What pattern do the dots make? And what changes if we put a detector at the slits to see which slit each one goes through?</p>
+    </div>
+    <div class="lab">
+      <div class="stage"><canvas id="c4" width="800" height="460" aria-label="Particles fired one at a time at two slits, with an optional detector"></canvas></div>
+      <div class="panel">
+        <div class="ctl"><span class="lbl">Detector at the slits</span>
+          <div class="seg" id="o-det"><button data-v="off" aria-pressed="true">Off (not watching)</button><button data-v="on" aria-pressed="false">On (watching)</button></div>
+        </div>
+        <div class="ctl"><span class="lbl">Fire</span>
+          <div class="seg" id="o-src"><button data-v="light" aria-pressed="true">Photons</button><button data-v="electrons" aria-pressed="false">Electrons</button></div>
+        </div>
+        <div class="btns">
+          <button class="btn" id="o-auto">Pause</button>
+          <button class="btn" id="o-fast">Add 300 quickly</button>
+          <button class="btn" id="o-clear">Clear screen</button>
+        </div>
+        <div class="meter-row"><span>Dots on screen</span><b id="o-count">0</b></div>
+        <span class="chip good" id="o-chip">Pattern: stripes (wave)</span>
+        <div class="note" id="o-note"></div>
+      </div>
+    </div>
+    <div class="card explain">
+      <h3>What's going on?</h3>
+      <ol class="steps">
+        <li><b>Each one lands as a single dot.</b> That's particle behavior.</li>
+        <li><b>With no detector, the dots slowly build up stripes.</b> Stripes come from interference, which only waves do. So each one acts like a wave that goes through <b>both</b> slits and interferes with itself.</li>
+        <li><b>With the detector on, we find out which slit it went through.</b> To detect it, we have to interact with it. Now it acts like a particle going through just <b>one</b> slit, and the stripes disappear. You get two bands.</li>
+      </ol>
+      <p class="takeaway"><b>The observer effect:</b> Measuring something can change how it behaves. Light and electrons act like waves when we don't measure their path, and like particles when we do.</p>
+    </div>
+    <div class="lower">
+      <div class="card"><h3>Try this</h3><ul class="tasks" id="tasks-4"></ul></div>
+      <div class="card"><h3>Check yourself</h3><div id="quiz-4"></div></div>
+    </div>
+  </section>
+
+  <footer>Simplified models for learning, not to scale.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const W=800, H=460, TAU=Math.PI*2;
+const rand=(a,b)=>a+Math.random()*(b-a);
+const $=id=>document.getElementById(id);
+
+function nmToRGB(nm){
+  let r=0,g=0,b=0;
+  if(nm>=380&&nm<440){r=-(nm-440)/60;b=1} else if(nm<490){g=(nm-440)/50;b=1} else if(nm<510){g=1;b=-(nm-510)/20}
+  else if(nm<580){r=(nm-510)/70;g=1} else if(nm<645){r=1;g=-(nm-645)/65} else if(nm<=780){r=1}
+  let f=1; if(nm<420) f=.35+.65*(nm-380)/40; else if(nm>700) f=.35+.65*(780-nm)/80;
+  const c=v=>Math.round(255*Math.pow(Math.max(0,v*f),.8)); return [c(r),c(g),c(b)];
+}
+function lightColor(nm,a=1){
+  if(nm<380) return `rgba(196,176,255,${a})`;
+  if(nm>760) return `rgba(170,58,48,${a})`;
+  const [r,g,b]=nmToRGB(nm), m=Math.max(r,g,b,1), k=Math.max(1,170/m);
+  return `rgba(${Math.min(255,r*k|0)},${Math.min(255,g*k|0)},${Math.min(255,b*k|0)},${a})`;
+}
+function colorName(nm){
+  if(nm<380) return 'Ultraviolet'; if(nm<450) return 'Violet'; if(nm<495) return 'Blue'; if(nm<570) return 'Green';
+  if(nm<590) return 'Yellow'; if(nm<620) return 'Orange'; if(nm<=750) return 'Red'; return 'Infrared';
+}
+function setupCanvas(cv){
+  const ctx=cv.getContext('2d');
+  function fit(){ const w=cv.clientWidth||800, dpr=Math.min(2,window.devicePixelRatio||1);
+    cv.width=Math.round(w*dpr); cv.height=Math.round(w*dpr*H/W); ctx.setTransform(cv.width/W,0,0,cv.height/H,0,0); }
+  fit(); new ResizeObserver(fit).observe(cv); return ctx;
+}
+function label(ctx,text,x,y,align='left',color='rgba(201,211,230,.85)',size=13,weight=500){
+  ctx.font=`${weight} ${size}px "Inter", system-ui, sans-serif`; ctx.fillStyle=color; ctx.textAlign=align; ctx.textBaseline='middle'; ctx.fillText(text,x,y);
+}
+function segBind(root,onChange){
+  root.addEventListener('click',e=>{ const b=e.target.closest('button[data-v]'); if(!b) return;
+    root.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); onChange(b.dataset.v); });
+}
+
+/* ---------- tabs ---------- */
+const stations=['interference','double-slit','photoelectric','observer'];
+let active='interference';
+function show(name){
+  if(!stations.includes(name)) name='interference'; active=name;
+  stations.forEach(s=>{ $('st-'+s).hidden=s!==name; $('tab-'+s).setAttribute('aria-selected',s===name?'true':'false'); });
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{ const n=t.dataset.station; if(location.hash!=='#'+n) location.hash=n; else show(n); }));
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+show(location.hash.slice(1));
+
+/* =========================================================
+   STATION 1 : INTERFERENCE
+   ========================================================= */
+const S0={shift:0, time:0};
+const c0=setupCanvas($('c0'));
+const WL=200, AMP=34;
+const rows=[{y:85,name:'Wave A'},{y:200,name:'Wave B'},{y:350,name:'A + B combined'}];
+function draw0(dt){
+  S0.time+=dt;
+  const ctx=c0; ctx.fillStyle='#090e1a'; ctx.fillRect(0,0,W,H);
+  const x0=150, x1=W-30, move=S0.time*60;
+  const phB=S0.shift*TAU;
+  const wa=x=>Math.sin((x-move)/WL*TAU), wb=x=>Math.sin((x-move)/WL*TAU+phB);
+  // guide lines
+  ctx.strokeStyle='rgba(120,140,180,.25)'; ctx.lineWidth=1;
+  rows.forEach(r=>{ ctx.beginPath(); ctx.moveTo(x0,r.y); ctx.lineTo(x1,r.y); ctx.stroke(); });
+  ctx.beginPath(); ctx.moveTo(x0,272); ctx.lineTo(x1,272); ctx.strokeStyle='rgba(120,140,180,.35)'; ctx.setLineDash([4,6]); ctx.stroke(); ctx.setLineDash([]);
+  // vertical crest marker line through wave A crest
+  const crestX = (()=>{ let x=move+WL/4; while(x<x0+WL*1.2) x+=WL; while(x>x0+WL*2.2) x-=WL; return x; })();
+  ctx.strokeStyle='rgba(240,194,75,.35)'; ctx.setLineDash([3,5]); ctx.beginPath(); ctx.moveTo(crestX,40); ctx.lineTo(crestX,250); ctx.stroke(); ctx.setLineDash([]);
+  function plot(f,yc,amp,col,lw){ ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.beginPath();
+    for(let x=x0;x<=x1;x+=2){ const y=yc-f(x)*amp; x===x0?ctx.moveTo(x,y):ctx.lineTo(x,y);} ctx.stroke(); }
+  plot(wa,rows[0].y,AMP,'#5ee2f0',3);
+  plot(wb,rows[1].y,AMP,'#f0a25e',3);
+  const sum=x=>wa(x)+wb(x);
+  const big=Math.abs(2*Math.cos(phB/2));
+  const col= big>1.6?'#5fe39a': big<.4?'#ff8a5c':'#e7ecf4';
+  plot(sum,rows[2].y,AMP,col,4);
+  // labels
+  label(ctx,'Wave A',20,rows[0].y,'left','#5ee2f0',14,600);
+  label(ctx,'Wave B',20,rows[1].y,'left','#f0a25e',14,600);
+  label(ctx,'Combined',20,rows[2].y-10,'left',col,14,600);
+  label(ctx,'(A + B)',20,rows[2].y+10,'left','rgba(201,211,230,.7)',12);
+  // crest/trough tag on wave B at the marker
+  const bval=wb(crestX);
+  const tag = bval>0.85?'crest': bval<-0.85?'trough':'';
+  if(tag){ label(ctx,'A: crest',crestX+8,rows[0].y-AMP-12,'left','rgba(240,194,75,.9)',12);
+           label(ctx,'B: '+tag,crestX+8,rows[1].y-bval*AMP+(tag==='crest'?-12:14),'left','rgba(240,194,75,.9)',12); }
+  label(ctx, big>1.6?'Bigger wave → brighter light': big<.4?'Waves cancel → no light (dark)':'Partly cancels → dimmer', x0, 440, 'left', col, 14, 600);
+}
+function refresh0(){
+  const s=S0.shift, big=Math.abs(Math.cos(Math.PI*s)); // 1 = fully in step
+  const chip=$('i-chip'), sw=$('i-swatch'), n=$('i-note');
+  sw.style.background=`rgba(255,240,160,${(big*big).toFixed(2)})`; sw.style.color= big>.5?'#2a2200':'var(--muted)';
+  if(big>.9){ chip.className='chip good'; chip.textContent='Constructive interference'; sw.textContent='Bright';
+    n.innerHTML='<b>Constructive interference.</b> The crests line up with crests, so the waves add together into a bigger wave. For light, that makes a <b>bright</b> spot.'; }
+  else if(big<.15){ chip.className='chip bad'; chip.textContent='Destructive interference'; sw.textContent='Dark';
+    n.innerHTML='<b>Destructive interference.</b> Each crest lines up with a trough, so the waves cancel out. For light, that makes a <b>dark</b> spot.'; }
+  else { chip.className='chip'; chip.style.background='var(--surface-2)'; chip.style.color='var(--muted)'; chip.textContent='In between'; sw.textContent='Dim';
+    n.innerHTML='The waves are partly out of step. They partly cancel, so the light is <b>dim</b>. Keep sliding to find the brightest and darkest spots.'; }
+  if(chip.classList.contains('good')||chip.classList.contains('bad')){ chip.style.background=''; chip.style.color=''; }
+  document.querySelectorAll('#i-quick button').forEach(b=>b.setAttribute('aria-pressed', Math.abs(+b.dataset.v-s)<.01?'true':'false'));
+}
+$('i-shift').addEventListener('input',e=>{ S0.shift=+e.target.value; refresh0(); });
+document.querySelectorAll('#i-quick button').forEach(b=>b.addEventListener('click',()=>{ S0.shift=+b.dataset.v; $('i-shift').value=S0.shift; refresh0(); }));
+refresh0();
+
+/* =========================================================
+   STATION 2 : DOUBLE SLIT (waves only)
+   ========================================================= */
+const G={srcX:62, barX:330, scrX:612, stripW:28, histX:656, histW:126, sep:66};
+const GL=G.scrX-G.barX;
+const lamFor=src=>src==='light'?9:7;
+const colFor=(src,a=1)=>src==='light'?lightColor(532,a):`rgba(94,226,240,${a})`;
+const slitsFor=mode=>{ const top=H/2-G.sep/2, bot=H/2+G.sep/2; return mode==='both'?[top,bot]:[top]; };
+const bandCenter=ys=>H/2+(ys-H/2)*(G.scrX-G.srcX)/(G.barX-G.srcX);
+function interfere(y,src){ const yr=y-H/2, c=Math.cos(Math.PI*G.sep*yr/(lamFor(src)*GL)); return c*c*Math.exp(-yr*yr/(2*125*125)); }
+function twoBands(y,sl){ let s=0; for(const ys of sl){ const d=y-bandCenter(ys); s+=Math.exp(-d*d/(2*20*20)); } return s; }
+function drawSource(ctx,src){
+  ctx.fillStyle='#2a3550'; ctx.beginPath(); ctx.roundRect(G.srcX-30,H/2-18,44,36,6); ctx.fill();
+  ctx.fillStyle=colFor(src,1); ctx.beginPath(); ctx.arc(G.srcX+8,H/2,6,0,TAU); ctx.fill();
+  label(ctx,src==='light'?'Light':'Electrons',G.srcX-8,H/2+34,'center');
+}
+function drawWall(ctx,sl){
+  const gap=7; ctx.fillStyle='#5b6680'; let y=0;
+  for(const ys of [H/2-G.sep/2,H/2+G.sep/2]){ if(sl.includes(ys)){ ctx.fillRect(G.barX-4,y,8,ys-gap-y); y=ys+gap; } }
+  ctx.fillRect(G.barX-4,y,8,H-y);
+}
+
+const S1={source:'light', slits:'both', time:0, maxI:1};
+const c1=setupCanvas($('c1'));
+const I1=y=>S1.slits==='both'?interfere(y,S1.source):twoBands(y,slitsFor('top'));
+function recompute1(){ let m=0; for(let y=0;y<H;y++) m=Math.max(m,I1(y)); S1.maxI=m||1; }
+function draw1(dt){
+  S1.time+=dt;
+  const ctx=c1, src=S1.source, sl=slitsFor(S1.slits), col=a=>colFor(src,a);
+  ctx.fillStyle='#090e1a'; ctx.fillRect(0,0,W,H);
+  drawSource(ctx,src);
+  const spacing=lamFor(src)*2.6, off=(S1.time*45)%spacing;
+  ctx.save(); ctx.lineWidth=1.6; ctx.beginPath(); ctx.rect(G.srcX+14,0,G.barX-G.srcX-18,H); ctx.clip();
+  for(let r=off;r<G.barX;r+=spacing){ ctx.strokeStyle=col(.5*(1-r/(G.barX+40))+.15); ctx.beginPath(); ctx.arc(G.srcX+8,H/2,r,-1.2,1.2); ctx.stroke(); }
+  ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(G.barX+4,0,G.scrX-G.barX-4,H); ctx.clip(); ctx.lineWidth=1.4;
+  for(const ys of sl) for(let r=off;r<GL+60;r+=spacing){ ctx.strokeStyle=col(.42*(1-r/(GL+80))+.06); ctx.beginPath(); ctx.arc(G.barX,ys,r,-1.45,1.45); ctx.stroke(); }
+  ctx.restore();
+  drawWall(ctx,sl);
+  label(ctx,sl.length===2?'Two slits':'One slit',G.barX,16,'center');
+  ctx.fillStyle='#121a2c'; ctx.fillRect(G.scrX,0,G.stripW,H);
+  for(let y=0;y<H;y+=2){ ctx.fillStyle=col(I1(y)/S1.maxI); ctx.fillRect(G.scrX,y,G.stripW,2); }
+  ctx.strokeStyle=col(.95); ctx.lineWidth=2; ctx.beginPath();
+  for(let y=30;y<=H;y+=2){ const x=G.histX+I1(y)/S1.maxI*G.histW; y===30?ctx.moveTo(x,y):ctx.lineTo(x,y);} ctx.stroke();
+  label(ctx,'Screen',G.scrX+G.stripW/2,16,'center');
+  label(ctx,'Brightness',G.histX+G.histW/2,16,'center');
+}
+function refresh1(){
+  recompute1();
+  $('s1-note').innerHTML = S1.slits==='both'
+    ? '<b>Two sets of ripples overlap.</b> Where a crest from one slit meets a crest from the other, they add up: <b>constructive interference</b>, a bright stripe. Where a crest meets a trough, they cancel: <b>destructive interference</b>, a dark stripe. Electrons do this too, so electrons can act like waves.'
+    : '<b>Only one slit.</b> There is no second set of ripples to interfere with, so the screen shows one bright band and no stripes.';
+}
+segBind(document.querySelector('[data-key="source"]'),v=>{ S1.source=v; refresh1(); });
+segBind(document.querySelector('[data-key="slits"]'),v=>{ S1.slits=v; refresh1(); });
+refresh1();
+
+/* =========================================================
+   STATION 3 : PHOTOELECTRIC
+   ========================================================= */
+const CUT=620;   // longest wavelength that frees an electron in this metal
+const S2={nm:550, br:50, photons:[], elec:[], sparks:[], acc:0, time:0};
+const c2=setupCanvas($('c2'));
+const lamp={x:96,y:84}, plate={x0:330,x1:770,y:368,h:34};
+const energy=nm=>1/nm;                     // relative photon energy
+const extra=()=>Math.max(0,energy(S2.nm)-energy(CUT))/(energy(250)-energy(CUT)); // 0..1
+function emit2(){ const tx=rand(plate.x0+30,plate.x1-30), ty=plate.y, dx=tx-lamp.x, dy=ty-lamp.y, d=Math.hypot(dx,dy);
+  S2.photons.push({x:lamp.x+dx/d*30,y:lamp.y+dy/d*30,ux:dx/d,uy:dy/d,tx,ty,ph:Math.random()*TAU}); }
+function update2(dt){
+  S2.time+=dt; S2.acc+=dt*S2.br*0.32; while(S2.acc>=1){ S2.acc--; emit2(); }
+  const ok=S2.nm<CUT, ex=extra();
+  for(const p of S2.photons){ p.x+=p.ux*420*dt; p.y+=p.uy*420*dt;
+    if(p.y>=p.ty){ p.done=1;
+      if(ok){ const a=rand(-2.6,-.55), s=(60+ex*420)*rand(.6,1); S2.elec.push({x:p.tx,y:p.ty-3,vx:Math.cos(a)*s,vy:Math.sin(a)*s}); }
+      S2.sparks.push({x:p.tx,y:p.ty,t:0,ok}); } }
+  S2.photons=S2.photons.filter(p=>!p.done);
+  for(const e of S2.elec){ e.x+=e.vx*dt; e.y+=e.vy*dt; } S2.elec=S2.elec.filter(e=>e.x>-20&&e.x<W+20&&e.y>-20);
+  for(const s of S2.sparks) s.t+=dt; S2.sparks=S2.sparks.filter(s=>s.t<.35);
+}
+function draw2(){
+  const ctx=c2; ctx.fillStyle='#090e1a'; ctx.fillRect(0,0,W,H);
+  const col=a=>lightColor(S2.nm,a);
+  if(S2.br>0){ const g=ctx.createLinearGradient(lamp.x,lamp.y,550,plate.y);
+    g.addColorStop(0,col(.10+.18*S2.br/100)); g.addColorStop(1,col(.02+.06*S2.br/100));
+    ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(lamp.x+14,lamp.y-10); ctx.lineTo(plate.x1-20,plate.y); ctx.lineTo(plate.x0+20,plate.y); ctx.lineTo(lamp.x-6,lamp.y+16); ctx.closePath(); ctx.fill(); }
+  ctx.save(); ctx.translate(lamp.x,lamp.y); ctx.rotate(Math.atan2(plate.y-lamp.y,550-lamp.x));
+  ctx.fillStyle='#2a3550'; ctx.beginPath(); ctx.roundRect(-46,-20,52,40,6); ctx.fill();
+  ctx.fillStyle='#3a4766'; ctx.beginPath(); ctx.moveTo(6,-20); ctx.lineTo(26,-28); ctx.lineTo(26,28); ctx.lineTo(6,20); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=col(S2.br>0?1:.2); ctx.fillRect(24,-24,4,48); ctx.restore();
+  label(ctx,'Light',lamp.x-14,lamp.y-44,'center');
+  const vis=Math.max(5,S2.nm/38);
+  for(const p of S2.photons){ const nx=-p.uy, ny=p.ux; ctx.strokeStyle=col(1); ctx.lineWidth=2; ctx.beginPath();
+    for(let s=-18;s<=0;s++){ const env=Math.sin(Math.PI*(s+18)/18), o=Math.sin(s/vis*TAU+p.ph)*5*env;
+      const x=p.x+p.ux*s+nx*o, y=p.y+p.uy*s+ny*o; s===-18?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); }
+  ctx.fillStyle='#8a93a8'; ctx.fillRect(plate.x0,plate.y,plate.x1-plate.x0,plate.h);
+  ctx.fillStyle='#6b7489'; ctx.fillRect(plate.x0,plate.y+plate.h-6,plate.x1-plate.x0,6);
+  ctx.fillStyle='rgba(240,200,80,.55)';
+  for(let i=0;i<46;i++){ const x=plate.x0+12+((i*97)%(plate.x1-plate.x0-24)), y=plate.y+8+((i*37)%(plate.h-16)); ctx.beginPath(); ctx.arc(x+Math.sin(S2.time*3+i)*1.5,y,1.8,0,TAU); ctx.fill(); }
+  label(ctx,'Metal (full of electrons)',(plate.x0+plate.x1)/2,plate.y+plate.h+18,'center');
+  for(const s of S2.sparks){ const a=1-s.t/.35; ctx.fillStyle=s.ok?col(.55*a):`rgba(255,140,90,${.35*a})`; ctx.beginPath(); ctx.arc(s.x,s.y,4+12*s.t/.35,0,TAU); ctx.fill(); }
+  for(const e of S2.elec){ ctx.fillStyle='#f0c24b'; ctx.beginPath(); ctx.arc(e.x,e.y,6,0,TAU); ctx.fill();
+    ctx.strokeStyle='#3a2a00'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(e.x-3,e.y); ctx.lineTo(e.x+3,e.y); ctx.stroke(); }
+  const lx=560, ly=40;
+  ctx.strokeStyle=col(1); ctx.lineWidth=2; ctx.beginPath(); for(let s=0;s<=18;s++){ const o=Math.sin(s/vis*TAU)*5*Math.sin(Math.PI*s/18); s?ctx.lineTo(lx+s,ly+o):ctx.moveTo(lx,ly);} ctx.stroke();
+  label(ctx,'= one photon',lx+26,ly);
+  ctx.fillStyle='#f0c24b'; ctx.beginPath(); ctx.arc(lx+9,ly+26,6,0,TAU); ctx.fill();
+  ctx.strokeStyle='#3a2a00'; ctx.beginPath(); ctx.moveTo(lx+6,ly+26); ctx.lineTo(lx+12,ly+26); ctx.stroke();
+  label(ctx,'= electron knocked out',lx+26,ly+26);
+  if(S2.nm<380) label(ctx,'Ultraviolet: we can\'t see it',lx,ly+56,'left','rgba(196,176,255,.9)');
+  else if(S2.nm>750) label(ctx,'Infrared: we can\'t see it',lx,ly+56,'left','rgba(220,120,100,.95)');
+}
+(function(){ const stops=[]; for(let nm=250;nm<=800;nm+=10){ const p=((nm-250)/550*100).toFixed(1);
+  stops.push(`${nm<380?'rgb(120,104,170)':nm>750?'rgb(90,30,26)':`rgb(${nmToRGB(nm).join(',')})`} ${p}%`); }
+  $('s2-spec').style.background=`linear-gradient(90deg, ${stops.join(',')})`; })();
+function refresh2(){
+  $('s2-nm-out').textContent=`${colorName(S2.nm)} · ${S2.nm} nm`; $('s2-br-out').textContent=S2.br+'%';
+  const e=energy(S2.nm), max=energy(250), ok=S2.nm<CUT, ex=extra();
+  $('s2-fill').style.width=(e/max*100)+'%'; $('s2-fill').style.background=lightColor(Math.min(760,Math.max(380,S2.nm)));
+  $('s2-need').style.left=(energy(CUT)/max*100)+'%';
+  $('s2-v').textContent= !ok?'none': ex<.25?'Slow': ex<.6?'Medium':'Fast';
+  const chip=$('s2-chip'); chip.className='chip '+(ok?'good':'bad'); chip.textContent=ok?'Electrons knocked out':'No electrons';
+  const n=$('s2-note');
+  if(!ok) n.innerHTML = S2.br>=80
+    ? '<b>Very bright, but still nothing!</b> Each photon of this color has too little energy. Adding more weak photons doesn\'t help, because one photon frees one electron.'
+    : '<b>No electrons.</b> Each photon of this color doesn\'t have enough energy. Try turning the brightness all the way up.';
+  else if(S2.br===0) n.innerHTML='<b>Light is off.</b> No photons, no electrons.';
+  else n.innerHTML='<b>Electrons knocked out!</b> Each photon has enough energy to free one electron. Shorter wavelength (toward violet) = more energy per photon = faster electrons. Brighter light = more photons = <i>more</i> electrons.';
+}
+$('s2-nm').addEventListener('input',e=>{ S2.nm=+e.target.value; refresh2(); });
+$('s2-br').addEventListener('input',e=>{ S2.br=+e.target.value; refresh2(); });
+refresh2();
+
+/* =========================================================
+   STATION 4 : OBSERVER EFFECT (one at a time)
+   ========================================================= */
+const S4={det:false, source:'light', auto:true, rate:14, parts:[], hits:[], bins:new Float32Array(Math.ceil(H/4)), flashes:[], acc:0, n:0, maxI:1, time:0};
+const c4=setupCanvas($('c4'));
+const both=slitsFor('both');
+const I4=y=>S4.det?twoBands(y,both):interfere(y,S4.source);
+function recompute4(){ let m=0; for(let y=0;y<H;y++) m=Math.max(m,I4(y)); S4.maxI=m||1; }
+function sample4(){ for(let i=0;i<5000;i++){ const y=rand(8,H-8); if(Math.random()*S4.maxI<I4(y)) return y; } return H/2; }
+const FOG0=G.srcX+60, FOG1=G.scrX-12;
+function fire4(){ const slit=both[(Math.random()*2)|0];
+  S4.parts.push({x:G.srcX+14, y:H/2, y0:H/2, slit, ty:sample4(), phase:'in', t:0}); }
+function deposit4(y){ S4.hits.push({y,x:G.scrX+rand(3,G.stripW-3)}); if(S4.hits.length>6000) S4.hits.shift();
+  S4.bins[Math.min(S4.bins.length-1,Math.max(0,(y/4)|0))]++; S4.n++; $('o-count').textContent=S4.n.toLocaleString(); }
+function clear4(){ S4.hits=[]; S4.bins.fill(0); S4.parts=[]; S4.n=0; $('o-count').textContent='0'; }
+function update4(dt){
+  S4.time+=dt;
+  if(S4.auto){ S4.acc+=dt*S4.rate; while(S4.acc>=1){ S4.acc--; fire4(); } }
+  const v=300;
+  for(const p of S4.parts){
+    if(S4.det){
+      if(p.phase==='in'){ p.x+=v*dt; const f=(p.x-G.srcX)/(G.barX-G.srcX); p.y=p.y0+(p.slit-p.y0)*f;
+        if(p.x>=G.barX){ p.phase='out'; S4.flashes.push({x:G.barX,y:p.slit,t:0}); } }
+      else { p.x+=v*dt; const f=(p.x-G.barX)/GL; p.y=p.slit+(p.ty-p.slit)*f;
+        if(p.x>=G.scrX){ p.phase='done'; deposit4(p.ty); S4.flashes.push({x:G.scrX+G.stripW/2,y:p.ty,t:0,hit:1}); } }
+    } else {
+      p.x+=v*dt;
+      if(p.x>=G.scrX){ p.phase='done'; deposit4(p.ty); S4.flashes.push({x:G.scrX+G.stripW/2,y:p.ty,t:0,hit:1}); }
+    }
+  }
+  S4.parts=S4.parts.filter(p=>p.phase!=='done');
+  for(const f of S4.flashes) f.t+=dt; S4.flashes=S4.flashes.filter(f=>f.t<.4);
+}
+function draw4(){
+  const ctx=c4, col=a=>colFor(S4.source,a);
+  ctx.fillStyle='#090e1a'; ctx.fillRect(0,0,W,H);
+  drawSource(ctx,S4.source); ctx.fillStyle='#090e1a';
+  label(ctx,'Fires one at a time',G.srcX-8,H/2+52,'center','rgba(201,211,230,.6)',11);
+  drawWall(ctx,both);
+  label(ctx,'Two slits',G.barX,16,'center');
+  if(S4.det){
+    for(const ys of both){ ctx.fillStyle='#1d2740'; ctx.strokeStyle='#f0c24b'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.roundRect(G.barX+8,ys-10,20,20,4); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#f0c24b'; ctx.beginPath(); ctx.arc(G.barX+18,ys,3.5,0,TAU); ctx.fill(); }
+    label(ctx,'Detector',G.barX+34,both[0]-24,'left','rgba(240,194,75,.95)',12,600);
+    for(const p of S4.parts){ ctx.fillStyle=col(1); ctx.beginPath(); ctx.arc(p.x,p.y,3.8,0,TAU); ctx.fill();
+      ctx.fillStyle=col(.18); ctx.beginPath(); ctx.arc(p.x,p.y,8,0,TAU); ctx.fill(); }
+  } else {
+    // path is not observed: cover the middle and show only where it starts and lands
+    ctx.fillStyle='rgba(40,50,75,.78)'; ctx.fillRect(FOG0,30,FOG1-FOG0,H-60);
+    ctx.setLineDash([5,5]); ctx.strokeStyle='rgba(160,175,205,.5)'; ctx.lineWidth=1; ctx.strokeRect(FOG0+.5,30.5,FOG1-FOG0-1,H-61); ctx.setLineDash([]);
+    label(ctx,'Not being watched',(FOG0+FOG1)/2,H/2-12,'center','rgba(225,232,245,.95)',15,600);
+    label(ctx,"We don't know which slit it went through",(FOG0+FOG1)/2,H/2+12,'center','rgba(201,211,230,.8)',12);
+    for(const p of S4.parts){ if(p.x<FOG0){ ctx.fillStyle=col(1); ctx.beginPath(); ctx.arc(p.x,p.y,3.8,0,TAU); ctx.fill(); } }
+  }
+  ctx.fillStyle='#121a2c'; ctx.fillRect(G.scrX,0,G.stripW,H);
+  ctx.fillStyle=col(.85); for(const h of S4.hits) ctx.fillRect(h.x-1,h.y-1,2.2,2.2);
+  let m=0; for(const b of S4.bins) m=Math.max(m,b);
+  if(m>0){ ctx.fillStyle=col(.55); for(let i=8;i<S4.bins.length;i++){ const w=S4.bins[i]/m*G.histW; if(w>0) ctx.fillRect(G.histX,i*4,w,3.4);} }
+  for(const f of S4.flashes){ const a=1-f.t/.4; ctx.fillStyle=f.hit?col(.6*a):`rgba(240,194,75,${.85*a})`;
+    ctx.beginPath(); ctx.arc(f.x,f.y,(f.hit?6:14)*(1+f.t*2),0,TAU); ctx.fill(); }
+  label(ctx,'Screen',G.scrX+G.stripW/2,16,'center');
+  label(ctx,'Where they land',G.histX+G.histW/2,16,'center');
+}
+function refresh4(){
+  recompute4();
+  const chip=$('o-chip'), one=S4.source==='light'?'photon':'electron';
+  chip.className='chip '+(S4.det?'bad':'good');
+  chip.textContent=S4.det?'Pattern: two bands (particle)':'Pattern: stripes (wave)';
+  $('o-note').innerHTML = S4.det
+    ? `<b>Detector on.</b> Now we know which slit each ${one} goes through. The stripes disappear and the dots pile up in two bands, just like particles would. Watching changed the result.`
+    : `<b>Detector off.</b> Each ${one} lands as one dot, but over time the dots form bright and dark stripes. That's an interference pattern, so each ${one} acts like a wave going through both slits.`;
+}
+segBind($('o-det'),v=>{ S4.det=v==='on'; clear4(); refresh4(); });
+segBind($('o-src'),v=>{ S4.source=v; clear4(); refresh4(); });
+$('o-auto').addEventListener('click',e=>{ S4.auto=!S4.auto; e.target.textContent=S4.auto?'Pause':'Resume'; });
+$('o-fast').addEventListener('click',()=>{ for(let i=0;i<300;i++) deposit4(sample4()); });
+$('o-clear').addEventListener('click',clear4);
+refresh4();
+for(let i=0;i<120;i++) deposit4(sample4());
+
+/* ---------- tasks + quizzes ---------- */
+const TASKS={
+  1:["Click “Crest meets crest.” What happens to the combined wave?",
+     "Click “Crest meets trough.” What happens to the combined wave?",
+     "Use the slider to find a spot in between. Is the light bright, dark, or dim?"],
+  2:["With both slits open, find the bright and dark stripes on the screen.",
+     "Which stripes come from constructive interference? Which from destructive?",
+     "Close one slit. Why do the stripes go away?"],
+  3:["Pick red light and turn brightness to 100%. Are any electrons knocked out?",
+     "Slide the color toward violet. At what color do electrons start coming out?",
+     "With violet light, change only the brightness. Do you get more electrons, faster electrons, or both?",
+     "Read “What's going on?” and explain the photoelectric effect in your own words."],
+  4:["With the detector off, let the dots build up. Do you see stripes or two bands?",
+     "Turn the detector on. What happens to the pattern?",
+     "Switch to electrons and repeat. Do electrons behave the same way?"]
+};
+const QUIZ={
+  1:[{q:"Two waves meet crest to crest. This is called…",o:["Constructive interference","Destructive interference"],a:0,
+      e:"The waves add up into a bigger wave, so light gets brighter."},
+     {q:"Two waves meet crest to trough. What happens?",o:["They make a bigger wave","They cancel out","Nothing changes"],a:1,
+      e:"That's destructive interference. For light, it makes a dark spot."}],
+  2:[{q:"Light sent through two slits makes many bright and dark stripes. This shows light acts like a…",o:["Particle","Wave"],a:1,
+      e:"Only waves can interfere and make stripes."},
+     {q:"A dark stripe on the screen is caused by…",o:["Constructive interference","Destructive interference"],a:1,
+      e:"Crest meets trough, the waves cancel, and no light reaches that spot."}],
+  3:[{q:"Very bright red light shines on the metal. What happens?",o:["Lots of electrons come out","No electrons come out"],a:1,
+      e:"Each red photon is too weak. More weak photons don't help, because one photon frees one electron."},
+     {q:"What decides how much energy one photon has?",o:["How bright the light is","The color (wavelength) of the light"],a:1,
+      e:"Shorter wavelength (toward violet) means more energy per photon. Brightness only changes how many photons there are."},
+     {q:"Making violet light brighter causes…",o:["More electrons to come out","Each electron to move faster"],a:0,
+      e:"Brighter light means more photons, so more electrons. Each photon has the same energy as before."},
+     {q:"The photoelectric effect shows that light acts like a…",o:["Wave","Particle"],a:1,
+      e:"Light delivers its energy in separate packets called photons."}],
+  4:[{q:"With no detector, photons sent one at a time make…",o:["Two bands","Bright and dark stripes"],a:1,
+      e:"Even one at a time, they build up an interference pattern, so each acts like a wave."},
+     {q:"What happens when a detector watches which slit each one goes through?",o:["The stripes get brighter","The stripes disappear and it acts like a particle","Nothing changes"],a:1,
+      e:"This is the observer effect: measuring it changes how it behaves."}]
+};
+function storeGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+function storeSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+for(const s of [1,2,3,4]){
+  const ul=$('tasks-'+s), saved=storeGet('wpd3-tasks-'+s)||[];
+  TASKS[s].forEach((t,i)=>{ const li=document.createElement('li'), id=`task-${s}-${i}`;
+    li.innerHTML=`<label class="check" for="${id}"><input type="checkbox" id="${id}"${saved[i]?' checked':''}><span>${t}</span></label>`;
+    li.querySelector('input').addEventListener('change',()=>storeSet('wpd3-tasks-'+s,[...ul.querySelectorAll('input')].map(x=>x.checked)));
+    ul.appendChild(li); });
+  const box=$('quiz-'+s);
+  QUIZ[s].forEach(item=>{ const d=document.createElement('div'); d.className='q';
+    d.innerHTML=`<p>${item.q}</p><div class="opts"></div><div class="fb" hidden></div>`;
+    const opts=d.querySelector('.opts'), fb=d.querySelector('.fb');
+    item.o.forEach((o,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+      b.addEventListener('click',()=>{ opts.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong'));
+        const ok=i===item.a; b.classList.add(ok?'right':'wrong'); fb.hidden=false; fb.className='fb '+(ok?'good':'bad');
+        fb.textContent=ok?'Correct. '+item.e:'Not quite. Try again.'; }); opts.appendChild(b); });
+    box.appendChild(d); });
+}
+
+/* ---------- full screen ---------- */
+(function(){
+  const btn=$('fs-btn'), root=document.documentElement;
+  const enabled=document.fullscreenEnabled||document.webkitFullscreenEnabled;
+  const req=root.requestFullscreen||root.webkitRequestFullscreen;
+  if(!enabled||!req) return;            // e.g. iPhone, or a frame that blocks it
+  btn.hidden=false;
+  const current=()=>document.fullscreenElement||document.webkitFullscreenElement;
+  const sync=()=>{ btn.querySelector('span').textContent=current()?'Exit full screen':'Full screen'; };
+  btn.addEventListener('click',()=>{
+    try{
+      if(current()) (document.exitFullscreen||document.webkitExitFullscreen).call(document);
+      else { const r=req.call(root); if(r&&r.catch) r.catch(()=>{}); }
+    }catch(e){}
+  });
+  document.addEventListener('fullscreenchange',sync); document.addEventListener('webkitfullscreenchange',sync);
+})();
+
+let last=performance.now();
+function loop(now){ const dt=Math.max(0,Math.min(.05,(now-last)/1000)); last=now;
+  if(active==='interference') draw0(dt);
+  else if(active==='double-slit') draw1(dt);
+  else if(active==='photoelectric'){ update2(dt); draw2(); }
+  else { update4(dt); draw4(); }
+  requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+})();
+</script>
+
+</body></html>

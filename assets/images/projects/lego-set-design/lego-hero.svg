@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 640" font-family="'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1680" height="640" fill="#1F2124"/>
+  <g font-size="80" font-weight="600" fill="#F4F4F2" letter-spacing="-2">
+    <text x="100" y="232">Design.</text>
+    <text x="100" y="326">Model.</text>
+    <text x="100" y="420" fill="#F08A4B">Manufacture.</text>
+  </g>
+
+  <!-- 1. Design: a sketch on paper -->
+  <g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="762" y="290" width="124" height="160" rx="4" stroke="#F4F4F2"/>
+    <g stroke="#B8B7B2" stroke-dasharray="7 7">
+      <path d="M824 330l38 22v44l-38 22-38-22v-44z"/>
+      <path d="M786 352l38 22 38-22M824 374v44"/>
+    </g>
+    <path d="M924 312l-52 96-6 22 18-14 52-96z" stroke="#F08A4B"/>
+  </g>
+
+  <!-- 2. Model: a dimensioned CAD part -->
+  <g fill="none" stroke="#F4F4F2" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1152 292l56 32v64l-56 32-56-32v-64z"/>
+    <path d="M1096 324l56 32 56-32M1152 356v64"/>
+  </g>
+  <g fill="none" stroke="#F08A4B" stroke-width="2.500" stroke-linecap="round">
+    <path d="M1096 452h112M1096 442v20M1208 442v20"/>
+  </g>
+  <text x="1152" y="484" text-anchor="middle" font-family="'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace" font-size="22" fill="#F08A4B">8.00</text>
+
+  <!-- 3. Manufacture: a part being 3D printed -->
+  <g fill="none" stroke="#B8B7B2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1396 296v156M1516 296v156M1396 296h120M1380 452h152"/>
+    <path d="M1396 330h120"/>
+  </g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1440 322h32v24l-16 18-16-18z"/>
+    <path d="M1414 440h84M1414 426h84M1414 412h84M1414 398h84"/>
+  </g>
+  <path d="M1414 384h42" fill="none" stroke="#F08A4B" stroke-width="4" stroke-linecap="round"/>
+
+  <g fill="none" stroke="#96958F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M988 380h52M1028 368l12 12-12 12"/>
+    <path d="M1276 380h52M1316 368l12 12-12 12"/>
+  </g>
+
+  <g text-anchor="middle">
+    <g font-size="34" font-weight="600" fill="#F4F4F2">
+      <text x="838" y="546">Design</text><text x="1152" y="546">Model</text><text x="1456" y="546">Manufacture</text>
+    </g>
+    <g font-size="23" fill="#B8B7B2">
+      <text x="838" y="582">Brief, sketches, prototype</text><text x="1152" y="582">Onshape assembly</text><text x="1456" y="582">3D-printed custom part</text>
+    </g>
+  </g>
+</svg>

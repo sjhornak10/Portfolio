@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 640" font-family="'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1680" height="640" fill="#1F2124"/>
+  <g font-size="80" font-weight="600" fill="#F4F4F2" letter-spacing="-2">
+    <text x="100" y="232">Blended.</text>
+    <text x="100" y="326">Self-paced.</text>
+    <text x="100" y="420" fill="#F08A4B">Mastery-based.</text>
+  </g>
+  <g font-size="32" font-weight="600" text-anchor="middle">
+    <rect x="850" y="218" width="200" height="104" rx="4" fill="none" stroke="#F4F4F2" stroke-width="2.500"/>
+    <text x="950" y="266" fill="#F4F4F2">Attempt</text>
+    <text x="950" y="300" font-size="22" font-weight="400" fill="#B8B7B2">on paper</text>
+    <rect x="1110" y="218" width="200" height="104" rx="4" fill="none" stroke="#F4F4F2" stroke-width="2.500"/>
+    <text x="1210" y="266" fill="#F4F4F2">Feedback</text>
+    <text x="1210" y="300" font-size="22" font-weight="400" fill="#B8B7B2">in person</text>
+    <rect x="1390" y="218" width="200" height="104" rx="4" fill="#F08A4B"/>
+    <text x="1490" y="266" fill="#1F1206">Mastery</text>
+    <text x="1490" y="300" font-size="22" font-weight="400" fill="#1F1206">move on</text>
+    <text x="1080" y="446" font-size="24" font-weight="400" fill="#B8B7B2">Not yet: revise and retake with new questions</text>
+  </g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1058 270h40M1088 260l10 10-10 10"/>
+    <path d="M1210 330v66H950v-62M940 346l10-12 10 12" stroke="#B8B7B2"/>
+  </g>
+  <g fill="none" stroke="#F08A4B" stroke-width="2.500" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1318 270h60M1368 260l10 10-10 10"/>
+  </g>
+</svg>

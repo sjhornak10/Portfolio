@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 640" font-family="'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1680" height="640" fill="#1F2124"/>
+  <g font-size="68" font-weight="600" fill="#F4F4F2" letter-spacing="-2">
+    <text x="100" y="304" fill="#F08A4B">Growth</text>
+    <text x="100" y="386">through failure.</text>
+  </g>
+
+  <!-- 1. Fail: the collapsed bridge -->
+  <g fill="none" stroke="#B8B7B2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M690 336h66v14h-66zM704 350v120M744 350v120"/>
+    <path d="M904 336h66v14h-66zM916 350v120M956 350v120"/>
+    <path d="M676 470h308" stroke="#47494D"/>
+  </g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M748.0 330.0L806.0 400.0"/><path d="M778.1 328.7L812.9 370.7"/><path d="M748.0 330.0L778.1 328.7L777.0 365.0L812.9 370.7L806.0 400.0"/>
+    <path d="M912.0 330.0L854.0 400.0"/><path d="M881.9 328.7L847.1 370.7"/><path d="M912.0 330.0L881.9 328.7L883.0 365.0L847.1 370.7L854.0 400.0"/>
+  </g>
+  <rect x="806" y="424" width="48" height="44" rx="3" fill="#F08A4B" transform="rotate(-8 830 446)"/>
+
+  <!-- 2. Learn: new connections forming -->
+  <g fill="none" stroke="#B8B7B2" stroke-width="3" stroke-linecap="round">
+    <path d="M1090 350l60-46 62 50M1090 350l32 82 72 4 18-82M1150 304l-28 128"/>
+    <path d="M1150 304l44 132" stroke="#F08A4B" stroke-dasharray="2 10"/>
+  </g>
+  <g fill="#F4F4F2"><circle cx="1090" cy="350" r="9"/><circle cx="1212" cy="354" r="9"/><circle cx="1122" cy="432" r="9"/></g>
+  <g fill="#F08A4B"><circle cx="1150" cy="304" r="10"/><circle cx="1194" cy="436" r="10"/></g>
+
+  <!-- 3. Reflect: writing it down -->
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="1392" y="296" width="110" height="150" rx="4"/>
+    <path d="M1412 330h70M1412 358h70M1412 386h44" stroke="#B8B7B2"/>
+    <path d="M1540 318l-52 96-6 22 18-14 52-96z" stroke="#F08A4B"/>
+  </g>
+
+  <g fill="none" stroke="#96958F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1000 380h52M1040 368l12 12-12 12"/>
+    <path d="M1276 380h52M1316 368l12 12-12 12"/>
+  </g>
+
+  <g text-anchor="middle">
+    <g font-size="34" font-weight="600" fill="#F4F4F2">
+      <text x="830" y="536">Fail</text><text x="1152" y="536">Learn</text><text x="1456" y="536">Reflect</text>
+    </g>
+    <g font-size="23" fill="#B8B7B2">
+      <text x="830" y="572">The bridge challenge</text><text x="1152" y="572">Neuroplasticity and mindset</text><text x="1456" y="572">Student reflection</text>
+    </g>
+  </g>
+</svg>
