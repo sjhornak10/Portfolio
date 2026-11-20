@@ -58,8 +58,7 @@
 
   function currentTheme() {
     var set = document.documentElement.getAttribute("data-theme");
-    if (set) return set;
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return set === "dark" ? "dark" : "light";   // light unless the visitor chose dark
   }
   function toggleTheme() {
     var next = currentTheme() === "dark" ? "light" : "dark";
@@ -238,6 +237,45 @@
       "<ul>" + items.map(function (i) { return "<li>" + i + "</li>"; }).join("") + "</ul></div>";
   }
 
+  var MAP_ICONS = {
+    system: '<path d="M6 20h36v18H6z"/><path d="M11 20v-5h8v5M29 20v-5h8v5"/>',
+    instructions: '<path d="M24 12c-5-3-11-4-18-3v27c7-1 13 0 18 3 5-3 11-4 18-3V9c-7-1-13 0-18 3z"/><path d="M24 12v27"/>',
+    reverse: '<circle cx="20" cy="20" r="11"/><path d="M28 28l12 12"/><path d="M14 22h12v-6h-4v-2h-4v2h-4z"/>',
+    define: '<rect x="11" y="8" width="26" height="33" rx="2"/><path d="M19 8V5h10v3M17 19h14M17 26h14M17 33h8"/>',
+    prototype: '<path d="M5 26h16v12H5zM8 26v-3h4v3M14 26v-3h4v3"/><path d="M35 18l9 5v10l-9 5-9-5V23zM26 23l9 5 9-5M35 28v10"/><path d="M22 20c3-4 6-4 9-3M24 39c-2 2-4 2-6 1"/>',
+    part: '<path d="M8 8h6v32H8zM14 12h24l-4 6H14M14 30h12l-3 5h-9"/><path d="M8 14h3M8 20h3M8 26h3M8 32h3"/>',
+    document: '<rect x="10" y="6" width="28" height="36" rx="2"/><path d="M16 6v36M21 15h11M21 21h11M21 27h7"/>',
+    beyond: '<path d="M24 6l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z"/>',
+    resources: '<path d="M10 14h22v26H10z"/><path d="M16 14V8h22v26h-6M15 22h12M15 28h12M15 34h8"/>',
+    wave: '<path d="M4 24c3-10 6-10 9 0s6 10 9 0 6-10 9 0 6 10 9 0 4-7 4-7"/>',
+    bohr: '<circle cx="24" cy="24" r="3.500"/><circle cx="24" cy="24" r="10"/><circle cx="24" cy="24" r="18"/><circle cx="34" cy="24" r="2.500"/><circle cx="11.300" cy="11.300" r="2.500"/>',
+    orbital: '<path d="M24 24c-9-3-14-10-10-15s10 6 10 15zM24 24c9 3 14 10 10 15s-10-6-10-15z"/><circle cx="24" cy="24" r="2"/><path d="M6 24h36" stroke-dasharray="2 4"/>',
+    config: '<rect x="3" y="14" width="13" height="20"/><rect x="17.500" y="14" width="13" height="20"/><rect x="32" y="14" width="13" height="20"/><path d="M7.500 30V18M5 21l2.500-3 2.500 3M11.500 18v12M9 27l2.500 3 2.500-3M22 30V18M19.500 21l2.500-3 2.500 3M26 18v12M23.500 27l2.500 3 2.500-3M38.500 30V18M36 21l2.500-3 2.500 3"/>',
+    flame: '<path d="M24 42c-8 0-13-5-13-12 0-8 7-11 8-20 5 4 6 8 5 12 3-2 4-5 4-8 5 4 9 9 9 16 0 7-5 12-13 12z"/><path d="M24 42c-3 0-5-2-5-5 0-4 3-5 4-9 3 3 6 5 6 9 0 3-2 5-5 5z"/>',
+    exam: '<rect x="10" y="6" width="28" height="36" rx="2"/><path d="M16 15h16M16 22h16M16 29h7"/><path d="M26 33l4 4 7-8"/>'
+  };
+  function moduleMapHtml(phases) {
+    var n = 0;
+    return '<ol class="mmap" aria-label="Module map">' + phases.map(function (ph) {
+      if (!ph.optional && !ph.label) n++;
+      var label = ph.label || (ph.optional ? "Optional" : "Phase " + (n < 10 ? "0" : "") + n);
+      return '<li class="mmap__phase' + (ph.optional ? " mmap__phase--optional" : "") + (ph.variant ? " mmap__phase--" + ph.variant : "") + '">' +
+        '<span class="mmap__icon"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' + (MAP_ICONS[ph.icon] || "") + "</svg></span>" +
+        '<div class="mmap__body"><span class="label label--accent">' + label + "</span><h3>" + esc(ph.title) + "</h3>" +
+        (ph.text ? "<p>" + esc(ph.text) + "</p>" : "") +
+        (ph.items && ph.items.length ? '<ul class="tags">' + ph.items.map(function (t) { return '<li class="tag">' + esc(t) + "</li>"; }).join("") + "</ul>" : "") +
+        (ph.loop ? '<p class="mmap__loop"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.300-5.700M20 4v5h-5"/></svg><span>' + esc(ph.loop) + "</span></p>" : "") +
+        (ph.gate ? '<p class="mmap__gate"><strong>' + esc(ph.gate.label) + "</strong>" + (ph.gate.text ? "<span>" + esc(ph.gate.text) + "</span>" : "") + "</p>" : "") +
+        "</div></li>";
+    }).join("") + "</ol>" +
+    (function () {
+      var g = phases.some(function (ph) { return ph.gate; }), l = phases.some(function (ph) { return ph.loop; });
+      if (!g && !l) return "";
+      return '<p class="mmap__legend">' + (g ? '<span class="mmap__key mmap__key--gate"></span>Gate: students move on only after passing' : "") +
+        (l ? '<span class="mmap__key mmap__key--loop"></span>Iteration loop' : "") + "</p>";
+    })();
+  }
+
   var needsModelViewer = false;
 
   function galleryItem(it) {
@@ -338,14 +376,19 @@
     function add(sid, title, html) { if (html) sections.push({ id: sid, title: title, html: html }); }
 
     add("overview", "Project Overview", prose(p.overview));
-    add("challenge", "The Challenge", prose(p.challenge));
+    var quote = p.challengeQuote
+      ? '<figure class="pullquote"><blockquote>' + esc(p.challengeQuote.text) + "</blockquote>" +
+        (p.challengeQuote.cite ? "<figcaption>" + esc(p.challengeQuote.cite) + "</figcaption>" : "") + "</figure>"
+      : "";
+    add("challenge", "The Challenge", (p.challenge || p.challengeQuote) ? quote + prose(p.challenge) : "");
     add("role", "My Role", prose(p.role));
 
     var proc = "";
     if (p.workflow && p.workflow.length) {
       proc += '<ol class="workflow" aria-label="Workflow">' + p.workflow.map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("") + "</ol>";
     }
-    if (p.process && p.learningPath) { proc += prose(p.process.intro); }
+    if (p.process) proc += prose(p.process.intro);
+    if (p.moduleMap) proc += moduleMapHtml(p.moduleMap);
     if (p.learningPath) {
       var lp = p.learningPath;
       proc += '<div class="path">' + lp.rows.map(function (r, ri) {
@@ -355,7 +398,6 @@
       }).join("") + "</div>";
     }
     if (p.process) {
-      if (!p.learningPath) proc += prose(p.process.intro);
       if (p.process.steps) {
         proc += '<ol class="steps">' + p.process.steps.map(function (s) { return "<li><div><h3>" + esc(s.title) + "</h3><p>" + s.text + "</p></div></li>"; }).join("") + "</ol>";
       }

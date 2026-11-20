@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 640" font-family="'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1680" height="640" fill="#1F2124"/>
+  <g font-size="80" font-weight="600" fill="#F4F4F2" letter-spacing="-2">
+    <text x="100" y="232">Interact.</text>
+    <text x="100" y="326">Observe.</text>
+    <text x="100" y="420" fill="#F08A4B">Explain.</text>
+  </g>
+  <g fill="none" stroke="#B8B7B2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M766 318h144"/><path d="M766 372h144"/><path d="M766 426h144"/></g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="808" cy="318" r="12" fill="#1F2124"/><circle cx="832" cy="426" r="12" fill="#1F2124"/></g>
+  <g fill="none" stroke="#F08A4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="872" cy="372" r="12" fill="#F08A4B"/></g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="1068" y="296" width="168" height="152" rx="4"/><path d="M1090 372h124" stroke="#96958F" stroke-width="1.500"/></g>
+  <g fill="none" stroke="#F08A4B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1090,372.0 1094,358.6 1098,347.4 1102,340.1 1106,338.0 1110,341.5 1114,349.9 1118,361.8 1122,375.4 1126,388.5 1130,398.9 1134,404.9 1138,405.6 1142,400.9 1146,391.4 1150,378.8 1154,365.2 1158,352.6 1162,343.1 1166,338.4 1170,339.1 1174,345.1 1178,355.5 1182,368.6 1186,382.2 1190,394.1 1194,402.5 1198,406.0 1202,403.9 1206,396.6 1210,385.4 1214,372.0"/></g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="1386" y="296" width="140" height="152" rx="4"/><circle cx="1414" cy="336" r="9"/><path d="M1436 336h64" stroke="#B8B7B2"/><circle cx="1414" cy="372" r="9"/><path d="M1436 372h64" stroke="#B8B7B2"/><circle cx="1414" cy="408" r="9"/><path d="M1436 408h64" stroke="#B8B7B2"/></g>
+  <g fill="none" stroke="#F08A4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="1414" cy="372" r="9" fill="#F08A4B"/><path d="M1409 372l4 4 7-8" stroke="#1F2124" stroke-width="2.500"/></g>
+  <g fill="none" stroke="#96958F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M988 380h52M1028 368l12 12-12 12"/>
+    <path d="M1276 380h52M1316 368l12 12-12 12"/>
+  </g>
+  <g text-anchor="middle">
+    <g font-size="34" font-weight="600" fill="#F4F4F2"><text x="838" y="546">Interact</text><text x="1152" y="546">Observe</text><text x="1456" y="546">Explain</text></g>
+    <g font-size="23" fill="#B8B7B2"><text x="838" y="582">Sliders and controls</text><text x="1152" y="582">Live, animated models</text><text x="1456" y="582">Built-in self-checks</text></g>
+  </g>
+</svg>

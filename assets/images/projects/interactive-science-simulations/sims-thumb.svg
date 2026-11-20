@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" font-family="'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1200" height="750" fill="#1F2124"/>
+  <g font-size="124" font-weight="600" fill="#F4F4F2" letter-spacing="-3">
+    <text x="96" y="250">Interact.</text>
+    <text x="96" y="394">Observe.</text>
+    <text x="96" y="538" fill="#F08A4B">Explain.</text>
+  </g>
+</svg>

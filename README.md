@@ -225,5 +225,5 @@ All links and asset paths are relative, so the site works under a repository sub
 
 - **Placeholders.** Anything not yet supplied is labeled "Placeholder" on the site. Search `data/projects.js` for `placeholder` to find what remains.
 - **Fonts.** IBM Plex is loaded from Google Fonts. If it cannot load, the site falls back to system fonts.
-- **Light and dark mode.** The site follows the visitor's system setting. The header button overrides it.
+- **Light and dark mode.** The site always opens in light mode. Visitors can switch to dark mode with the button in the header, and the site remembers their choice. The simulations follow the same setting.
 - **Search and link previews.** Each page has its own title and description in its `<head>`. Once the site is live you can add an `og:image` tag for link-preview images.

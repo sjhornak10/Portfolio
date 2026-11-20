@@ -56,8 +56,13 @@ window.PROJECTS = [
       "The unit is delivered as a single Canvas module of 30 items: four lesson pages, 13 graded assignments, two quizzes, an optional extension challenge, and supporting videos and references. It ends with a 200-point engineering notebook that documents the whole process."
     ],
 
+    challengeQuote: {
+      text: "Can you design a system that someone else can successfully build using only your instructions?",
+      cite: "The unit's central engineering question, from the introduction students read on day one"
+    },
+
     challenge: [
-      "The unit brings a complete product development cycle into a single project, and it asks students to treat LEGO as a precision-manufactured system and not as a toy. Their custom part has to connect to that system, so tolerance and fit become real problems to solve.",
+      "As the introduction tells students, this is not a “build something fun” project. It is a design, manufacturing, and documentation challenge. The unit brings a complete product development cycle into a single project, and it asks students to treat LEGO as a precision-manufactured system and not as a toy. Their custom part has to connect to that system, so tolerance and fit become real problems to solve.",
       "Every student set has to meet the same engineering constraints:",
       "<ul><li>Fewer than 100 total pieces, using standard LEGO bricks wherever possible</li><li>At least one custom LEGO-compatible part, designed and 3D printed by the student</li><li>No more than 30 g of PLA in total for all custom parts</li><li>Buildable in real life and as an Onshape assembly</li><li>Buildable by another person using only the student's instructions</li></ul>"
     ],
@@ -69,17 +74,59 @@ window.PROJECTS = [
     ],
 
     process: {
-      intro: ["The module is sequenced in five stages. Students study the existing system first, and they build a physical prototype with real bricks before they open CAD."],
-      steps: [
-        { title: "Study the system", text: "Students examine LEGO as an engineered system: standardization, tolerances, and interference fits. They analyze how wordless instruction manuals communicate a build, then reverse engineer real bricks by hand. Two short checks confirm understanding before the design work starts." },
-        { title: "Define the product", text: "After the design challenge launch, students brainstorm at least three set concepts, select one with a written justification, draw concept sketches and a multiview drawing, and write a design brief covering the problem statement, criteria, constraints, risks, and custom part plan." },
-        { title: "Prototype, then model", text: "Students build a physical prototype from classroom bricks to test structure, stability, piece count, and build sequence. They then model the full set as an Onshape assembly that is fully mated, organized, and matched to the prototype." },
-        { title: "Engineer the custom part", text: "A mini lesson on tolerance and fit covers loose, transition, and interference fits and the variation that FDM printing adds. Students model a parametric part on the 8 mm stud spacing and document it in a fully dimensioned drawing. They must explain their tolerance reasoning and get approval before printing, then test fit and connection strength and revise." },
-        { title: "Assemble and document", text: "Students complete the final assembly physically and in CAD, then produce LEGO-style build instructions with exploded views, sub-assemblies, and a bill of materials. The engineering notebook brings every phase together, and an optional extension invites students to design a custom minifigure accessory." }
-      ]
+      intro: ["The unit runs as one Canvas module that students work through in order, from studying how LEGO works to documenting a finished set. Mastery checks and an approval step act as gates: students move on only once they have shown they are ready, and the engineering notebook is built piece by piece along the way."]
     },
 
-    tools: ["Canvas LMS", "Onshape", "Parametric modeling", "Multicomponent assemblies", "Dimensional tolerances", "Technical drawings", "Exploded views", "Bills of materials", "FDM 3D printing (PLA)", "Cura slicer", "Engineering notebooks"],
+    /* The module map drawn at the top of the process section.
+       icon: system, instructions, reverse, define, prototype, part, document, beyond */
+    moduleMap: [
+      {
+        title: "Study the system", icon: "system",
+        text: "Students learn how LEGO is made and why it works, from its history and design process to tolerances, interference fits, and standardization. Every student examines real bricks by hand, because I teach as if they are seeing LEGO for the first time.",
+        items: ["How LEGO is made", "LEGO as an engineered system", "Hands-on brick exploration", "Labeled brick drawing", "LEGO design documentary"],
+        gate: { label: "Mastery check", text: "Students show they understand the basics before moving on." }
+      },
+      {
+        title: "Read instructions like an engineer", icon: "instructions",
+        text: "Students study real LEGO instruction booklets to see how they communicate without words, through exploded views, sequencing, and visual hierarchy.",
+        items: ["Instruction analysis", "In-class exploration"],
+        gate: { label: "Oral mastery check", text: "At my desk, each student explains a page of real instructions, scored with a rubric they see in advance." }
+      },
+      {
+        title: "Reverse engineer", icon: "reverse",
+        text: "Students investigate what makes LEGO reliable: connection force, the stud and tube system, and why tiny changes in dimension matter.",
+        items: ["LEGO parts guide", "Reverse engineering investigation", "Design review reading"]
+      },
+      {
+        title: "Define the product", icon: "define",
+        text: "The design challenge launches only after students understand the system. They brainstorm at least three ideas, select one, and write a design brief covering the client, problem, criteria, constraints, risks, and custom part plan.",
+        items: ["Challenge launch", "Brainstorming", "Concept selection", "Design brief"]
+      },
+      {
+        title: "Prototype and model", icon: "prototype",
+        text: "Students prototype with real bricks from a bin of thousands of pieces, then model the set as a mated Onshape assembly.",
+        items: ["Physical prototype", "Onshape assembly", "CAD reflection"],
+        loop: "Prototype and CAD inform each other as the design develops"
+      },
+      {
+        title: "Engineer the custom part", icon: "part",
+        text: "Students learn to use dial calipers, work through a mini lesson on tolerance and fit, and design a parametric part on the 8 mm stud spacing with a fully dimensioned drawing.",
+        items: ["Dial calipers", "Tolerance and fit", "Custom part design", "3D printing"],
+        gate: { label: "Print approval", text: "CAD model, drawing, mass under 30 g, and tolerance reasoning are checked before anything prints." },
+        loop: "Print, test, redesign, and reprint until it fits real LEGO"
+      },
+      {
+        title: "Assemble and document", icon: "document",
+        text: "Students complete the final assembly in bricks and in CAD, create LEGO-style instructions with exploded views and a bill of materials, and finish the engineering notebook.",
+        items: ["Final assembly", "Build instructions", "Engineering notebook"]
+      },
+      {
+        title: "Going beyond", icon: "beyond", optional: true,
+        text: "Students who finish early can design a custom minifigure or accessory."
+      }
+    ],
+
+    tools: ["Canvas LMS", "Onshape", "Parametric modeling", "Multicomponent assemblies", "Dimensional tolerances", "Technical drawings", "Exploded views", "Bills of materials", "Dial calipers", "FDM 3D printing (PLA)", "Cura slicer", "Engineering notebooks"],
 
     deliverables: [
       {
@@ -93,6 +140,16 @@ window.PROJECTS = [
         items: ["A physical LEGO-compatible set of fewer than 100 pieces", "A matching, fully mated Onshape assembly", "At least one custom 3D-printed part", "Concept sketches and a multiview drawing", "A fully dimensioned technical drawing of the custom part", "Build instructions with exploded views and a bill of materials", "An engineering notebook"]
       },
       {
+        title: "What success looks like",
+        by: "me",
+        items: ["The digital and physical models match", "The custom part fits and functions correctly", "Another student can build the set using only the instructions", "The documentation is clear, organized, and professional"]
+      },
+      {
+        title: "Skills students practice",
+        by: "me",
+        items: ["Parametric modeling", "Assemblies and mates", "Design under constraints", "Manufacturing considerations", "Technical communication and documentation", "Iteration and testing", "Professional presentation"]
+      },
+      {
         title: "Engineering notebook rubric (200 points)",
         by: "me",
         items: ["Problem definition and design brief: 20", "Brainstorming and idea development: 20", "Concept selection and sketches: 20", "Physical prototype and iteration: 20", "CAD modeling: 20", "Custom part design and drawing: 20", "Printing and testing: 10", "Final assembly: 20", "Instruction creation: 20", "Final reflection: 20", "Visual communication: 10"]
@@ -104,18 +161,73 @@ window.PROJECTS = [
       }
     ],
 
-    outcomes: {
-      placeholder: "Results and outcomes for this unit have not been added yet."
-    },
+    outcomes: {},
 
     gallery: [
-      { title: "Project instructions", note: "The design brief and instructions given to students.", items: [] },
-      { title: "Canvas module walkthrough", note: "A screenshot of the module and a short narrated walkthrough.", authorNote: "Record from a blank copy of the course so no student names appear.", items: [] },
-      { title: "CAD screenshots", authorNote: "Onshape part studios and assemblies. Label each image as my work or student work.", items: [] },
-      { title: "Technical drawings", note: "Fully dimensioned drawings of custom parts.", items: [] },
-      { title: "Physical prototype photographs", authorNote: "Printed parts and finished sets. Photos must not show students or student names.", items: [] },
-      { title: "Assembly instructions", note: "Student-made build instructions with exploded views.", items: [] },
-      { title: "Example engineering documentation", authorNote: "Notebook pages, bills of materials, and exploded views, with student names removed.", items: [] }
+      {
+        title: "Example student project: a lighthouse set",
+        note: "Everything in this section comes from one student team's engineering notebook. It shows the full path the unit asks for, from brainstorming to a finished, documented set. Names have been removed.",
+        items: [
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/final-assembly.jpg", by: "student",
+            alt: "A finished LEGO lighthouse with red and white striped walls, a gray lamp room, and a yellow 3D-printed bulb",
+            caption: "The finished set: a lighthouse with two custom 3D-printed parts, a bulb and a sloped roof." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/brainstorming.jpg", by: "student",
+            alt: "Brainstorming sheet with hand-drawn sketches of a lighthouse, a holiday tree, and a four-sided die, each with an estimated piece count",
+            caption: "Brainstorming: three set ideas, each with a piece-count estimate and a possible custom part." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/concept-sketch.jpg", by: "student",
+            alt: "Isometric sketch of the lighthouse on dot paper, with each component drawn separately and dimensioned in studs",
+            caption: "Concept sketch on isometric paper, with each component dimensioned in studs." }
+        ]
+      },
+      {
+        title: "Prototype and CAD model",
+        items: [
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/prototype.jpg", by: "student",
+            alt: "Early physical prototype of the lighthouse built from tan, red, and dark gray LEGO bricks",
+            caption: "The physical prototype, built from classroom bricks before any CAD work." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/cad-assembly.jpg", by: "student",
+            alt: "Onshape rendering of the complete lighthouse assembly",
+            caption: "The complete set as a mated Onshape assembly." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/cad-exploded.jpg", by: "student",
+            alt: "Exploded view of the lighthouse assembly with callouts labeling the roof, bulb supports, tile piece, and main structure",
+            caption: "An exploded view with callouts explaining what each part does." }
+        ]
+      },
+      {
+        title: "Custom parts: design, drawings, and testing",
+        note: "The team's notebook records that they did not account for tolerance at first, which led to several redesigns before the parts fit.",
+        items: [
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/bulb-cad.jpg", by: "student",
+            alt: "Onshape model of a yellow spherical bulb part",
+            caption: "The custom bulb, modeled in Onshape." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/roof-cad.jpg", by: "student",
+            alt: "Onshape model of a 2x2 sloped roof piece with four studs on top",
+            caption: "The custom 2x2 sloped roof piece." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/bulb-drawing.png", by: "student",
+            alt: "Technical drawing of the bulb with front, top, bottom, and isometric views and dimensions in millimeters",
+            caption: "Dimensioned drawing of the bulb, including the 5.25 mm hole that fits a LEGO stud." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/slope-drawing.png", by: "student",
+            alt: "Technical drawing of the sloped roof piece with front, top, bottom, and isometric views and dimensions in millimeters",
+            caption: "Dimensioned drawing of the roof piece." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/printed-parts.jpg", by: "student",
+            alt: "A yellow 3D-printed bulb and a light gray 3D-printed roof piece on a table",
+            caption: "The printed parts." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/fit-testing.jpg", by: "student",
+            alt: "The printed bulb mounted on a post beside the printed roof piece, with the lighthouse in the background",
+            caption: "Fit testing. The team found the bulb fit well after refinement, while the roof printed loose and needed work." }
+        ]
+      },
+      {
+        title: "Build instructions",
+        items: [
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/instructions-base.jpg", by: "student",
+            alt: "Step-by-step instruction sheet for the lighthouse base, with seven numbered steps and a pieces-required list",
+            caption: "Instructions for the base, with numbered steps and a list of pieces required." },
+          { type: "image", src: "assets/images/projects/lego-set-design/example-lighthouse/instructions-main.jpg", by: "student",
+            alt: "Instruction sheet for the main assembly showing the lamp room, roof, and bulb being added in four steps",
+            caption: "Instructions for the main assembly." }
+        ]
+      }
     ]
   },
 
@@ -147,30 +259,59 @@ window.PROJECTS = [
     ],
 
     /* The flow chart at the top of the process section. See README.md, "Add a learning path". */
+    /* The module map at the top of the process section, drawn from the Unit 3: Electrons module in Canvas.
+       icon: resources, wave, bohr, orbital, config, flame, exam, beyond   variant: "lab" highlights a whole-class lab */
+    moduleMap: [
+      {
+        label: "Unit 3 resources", title: "Unit resources", icon: "resources",
+        text: "Available alongside the learning goals for the whole unit: the learning goals, notes, guided notes, a video library, and practice.",
+        items: ["Learning goals", "Unit notes", "Guided notes", "Video library", "Practice"]
+      },
+      {
+        label: "Learning goal 3.1", title: "Wave-particle duality", icon: "wave",
+        text: "A recorded lecture and supporting videos, an interactive simulation, a reading, and practice.",
+        items: ["Lecture video", "Supporting videos", "Wave–Particle Duality Lab", "Reading 5.1", "Practice 3.1"],
+        gate: { label: "3.1 mastery check", text: "Random questions from the goal's question bank, answered on paper, with feedback in person. Every learning goal ends this way; the steps are shown below the map." }
+      },
+      {
+        label: "Learning goal 3.2", title: "The Bohr model and spectroscopy", icon: "bohr",
+        text: "A lecture, three readings, two emission simulations, practice, and a quiz covering goals 3.1 and 3.2.",
+        items: ["Lecture video", "Readings 5.5, 5.6, 5.12", "Bohr line spectra simulation", "Atomic emission simulation", "Practice 3.2", "Quiz 3.1/3.2"],
+        gate: { label: "3.2 mastery check" }
+      },
+      {
+        label: "Learning goal 3.3", title: "Orbitals", icon: "orbital",
+        text: "A lecture, an orbital visualization, a reading, and practice on orbitals and uncertainty.",
+        items: ["Lecture video", "Orbital visualization", "Reading 5.13", "Practice 3.3"],
+        gate: { label: "3.3 mastery check" }
+      },
+      {
+        label: "Learning goal 3.4", title: "Electron configurations", icon: "config",
+        text: "Three short lectures, four readings, and layered practice, ending with a quiz covering goals 3.3 and 3.4.",
+        items: ["Lectures 3.4.1–3.4.3", "Readings 5.15, 5.18–5.20", "Practice 3.4", "Configuration practice 1 and 2", "Quiz 3.3/3.4"],
+        gate: { label: "3.4 mastery check" }
+      },
+      {
+        label: "Whole-class lab", variant: "lab", title: "Flame test lab", icon: "flame",
+        text: "Students identify metal ions by their flame colors and an unknown gas by its emission spectrum, then explain what they see with the Bohr model. Because the lab is built around a phenomenon, every student gains from it wherever they are in the self-paced sequence.",
+        items: ["Flame tests", "Spectrum glasses", "Spectroscope", "Claim, evidence, reasoning", "SEP rubric"]
+      },
+      {
+        label: "End of unit", title: "Review and unit exam", icon: "exam",
+        text: "A Bohr model activity, a review game, and a practice exam prepare students for the unit exam.",
+        items: ["Bohr model activity", "Review Kahoot", "Practice exam", "Unit 3 exam"]
+      },
+      {
+        title: "Going beyond", icon: "beyond", optional: true,
+        text: "Students who finish early can take on a spectroscopy research project, review current research through Science Daily and primary literature, or watch the documentary Hiding in the Light."
+      }
+    ],
+
+    /* Detail of how every mastery check works, shown below the module map. */
     learningPath: {
       rows: [
         {
-          label: "Across a unit (Unit 3: Electrons)",
-          steps: [
-            { title: "Goal 3.1", text: "Wave-particle duality" },
-            { title: "Goal 3.2", text: "The Bohr model and spectroscopy" },
-            { title: "Goal 3.3", text: "Orbitals" },
-            { title: "Goal 3.4", text: "Electron configurations" },
-            { title: "End of unit", text: "End-of-unit lab and unit assessment" }
-          ]
-        },
-        {
-          label: "Inside one learning goal, at the student's own pace (Goal 3.1)",
-          steps: [
-            { title: "Watch", text: "My recorded lecture with captions and built-in questions, plus supporting videos" },
-            { title: "Explore", text: "Wave-particle duality simulation" },
-            { title: "Read", text: "Reading 5.1, Electromagnetic Spectrum" },
-            { title: "Practice", text: "Practice 3.1 worksheet" },
-            { title: "Mastery check", text: "Students move on once they show mastery" }
-          ]
-        },
-        {
-          label: "The mastery check",
+          label: "How every mastery check works",
           steps: [
             { title: "New questions", text: "Drawn at random from that learning goal's question bank, so every attempt is different" },
             { title: "On paper", text: "The student answers by hand on the mastery check form" },
@@ -179,28 +320,14 @@ window.PROJECTS = [
             { title: "Mastery", text: "8 of 10 or higher. The student moves on to the next learning goal" }
           ]
         }
-      ],
-      band: {
-        title: "Labs, done together as a class",
-        text: "Labs are generally built around a phenomenon, so every student gains from them no matter where they are in the self-paced sequence. Each unit also ends with a lab."
-      }
+      ]
     },
 
     process: {
       intro: [
-        "Each unit is divided into learning goals, and each learning goal is its own sequence in Canvas. Students work through the sequence in order and finish with a mastery check.",
+        "Each unit runs as one Canvas module. The unit is divided into learning goals, and each learning goal is its own sequence that students work through at their own pace and finish with a mastery check. The map below follows Unit 3: Electrons.",
         "I open my courses with a lesson on growth mindset: a bridge-building challenge where failure is likely, a lesson on neuroplasticity, examples of famous failures, and a student reflection. The course structure is built to match it. A mastery check that comes back as \"not yet\" is a normal step in learning, followed by feedback and another attempt.",
-        "The mastery check is the gate. Students take it on paper, bring it to me, and get feedback in person right away. They retake it until they show mastery, which means at least 8 out of 10. Each learning goal has its own question bank, so a retake is a new set of questions and not a second try at the same ones.",
-        "Self-pacing does not mean students work alone all the time. Labs are generally phenomenon-based, which means the whole class can do them together and every student gets value from them, whether they are ahead of the pace or behind it. End-of-unit labs bring the class back together again."
-      ],
-      list: [
-        "Instructional videos",
-        "Guided learning materials",
-        "Self-paced lessons",
-        "Mastery checks",
-        "Phenomenon-based labs and end-of-unit labs",
-        "Assessments and rubrics",
-        "Differentiated learning experiences"
+        "Self-pacing does not mean students work alone all the time. Labs are generally phenomenon-based, which means the whole class can do them together and every student gets value from them, whether they are ahead of the pace or behind it."
       ]
     },
 
@@ -303,8 +430,19 @@ window.PROJECTS = [
           { type: "link", href: "https://go.screenpal.com/player/cZ6rDnVWP6z?quiz_id=cZXXFAh5N", title: "Watch the 3.1 lecture with its built-in questions", note: "13 minutes, hosted on ScreenPal" }
         ]
       },
-      { title: "Module walkthrough video", note: "A short narrated clip of one learning goal from a student's point of view.", items: [] },
-      { title: "Lab examples", note: "A phenomenon-based lab and an end-of-unit lab.", items: [] },
+      {
+        title: "Lab example: Flame test",
+        note: "A phenomenon-based lab done together as a class. Students identify an unknown metal salt by its flame color and an unknown gas by its emission spectrum, then explain both with claim, evidence, and reasoning.",
+        items: [
+          { type: "image", src: "assets/images/projects/modern-classroom-chemistry/flame-lab-page-1.png", by: "me",
+            alt: "First page of the Flame Test Lab handout, with the background, purpose, pre-lab prediction, materials, and procedure",
+            caption: "The lab handout: background, purpose, a pre-lab prediction, and the procedure." },
+          { type: "image", src: "assets/images/projects/modern-classroom-chemistry/flame-lab-rubric.png", by: "me",
+            alt: "The Flame Test Lab competency rubric, scoring four Indiana Science and Engineering Practices and lab content from 4 to 1",
+            caption: "A 20-point competency rubric built on four Indiana Science and Engineering Practices plus lab content." },
+          { type: "document", src: "assets/documents/flame-test-lab.pdf", title: "Flame Test Lab (full handout)", note: "PDF, 6 pages" }
+        ]
+      },
       {
         title: "Mastery assessments",
         note: "The generic form students use for every mastery check.",
@@ -312,7 +450,23 @@ window.PROJECTS = [
           { type: "document", src: "assets/documents/mastery-check-form.pdf", title: "Mastery check submission form", note: "PDF, 1 page" }
         ]
       },
-      { title: "Curriculum examples", items: [] },
+      {
+        title: "Curriculum examples",
+        note: "Materials students use inside each learning goal, from Unit 3: Electrons.",
+        items: [
+          { type: "image", src: "assets/images/projects/modern-classroom-chemistry/unit-3-learning-goals.png", by: "me",
+            alt: "The opening page of the Unit 3 notes, listing learning goals 3.1 through 3.4 with the readings for each",
+            caption: "Unit 3 opens with its four learning goals and the readings for each." },
+          { type: "image", src: "assets/images/projects/modern-classroom-chemistry/guided-notes-page-1.png", by: "me",
+            alt: "First page of the Unit 3 guided notes, with the learning goals and questions for section 3.1, What is Light?",
+            caption: "Guided notes follow the lectures, with questions students answer as they watch." },
+          { type: "image", src: "assets/images/projects/modern-classroom-chemistry/practice-3-1.png", by: "me",
+            alt: "Practice worksheet for learning goal 3.1 with five questions on the wave-particle duality of light and electrons",
+            caption: "A practice worksheet students complete before the 3.1 mastery check." },
+          { type: "document", src: "assets/documents/unit-3-guided-notes.pdf", title: "Unit 3 Guided Notes", note: "PDF, 9 pages" },
+          { type: "document", src: "assets/documents/practice-3-1-wave-particle-duality.pdf", title: "Practice 3.1: Wave-Particle Duality", note: "PDF, 1 page" }
+        ]
+      },
       { title: "Research findings", note: "Summary slides or a written report of the year-over-year comparison.", items: [] }
     ]
   },
@@ -326,8 +480,9 @@ window.PROJECTS = [
     tags: ["Claude Code", "HTML / JavaScript", "AI-assisted development", "Canvas LMS embedding", "Educational technology"],
     featured: true,
     glyph: "sim",
-    thumbnail: "assets/images/projects/interactive-science-simulations/light-color-bohr-model.jpg",
-    heroImage: "",
+    thumbnail: "assets/images/projects/interactive-science-simulations/sims-thumb.svg",
+    heroImage: "assets/images/projects/interactive-science-simulations/sims-hero.svg",
+    heroAlt: "Graphic: Interact. Observe. Explain. Three stages are shown: slider controls, a screen showing a wave, and a self-check question with an answer selected.",
     context: "Chemistry, physics, and engineering instruction",
 
     overview: [
@@ -390,6 +545,24 @@ window.PROJECTS = [
           { src: "assets/images/projects/interactive-science-simulations/light-color-bohr-model.jpg", alt: "The wavelength and color section, showing a green light wave at 532 nanometers above a spectrum slider" }
         ],
         source: ""
+      },
+      {
+        id: "plate-boundaries",
+        title: "Graham Cracker Plates vs. the Real Earth",
+        description: "A virtual version of the graham cracker plate tectonics lab. Students pick a plate boundary, move the plates with a slider or the play button, and watch the graham cracker model side by side with a cross-section of the real Earth. Students who missed the lab used it to complete the activity, and students who were present used it to connect what they saw in the model to what happens on Earth.",
+        objectives: [
+          "Describe what happens at divergent, transform, and convergent plate boundaries",
+          "Compare a physical model with the Earth process it represents",
+          "Explain how earthquakes, mountains, trenches, and volcanoes form at plate boundaries",
+          "Name a real-world example of each type of boundary"
+        ],
+        technology: ["HTML", "CSS", "JavaScript", "SVG animation", "AI-assisted development"],
+        role: "I designed this for Lab 6 in my hybrid physical science course at Indiana University East and built it with AI-assisted development.",
+        path: "simulations/plate-boundaries/index.html",
+        screenshots: [
+          { src: "assets/images/projects/interactive-science-simulations/plate-boundaries.jpg", alt: "The subduction view, with a fruit roll-up sliding under a graham cracker beside a cross-section of an oceanic plate sinking under a continent" }
+        ],
+        source: ""
       }
     ],
 
@@ -407,8 +580,9 @@ window.PROJECTS = [
     tags: ["CAD modeling", "FDM 3D printing", "Multicolor printing", "Laser fabrication", "Rapid prototyping"],
     featured: true,
     glyph: "fab",
-    thumbnail: "",
-    heroImage: "",
+    thumbnail: "assets/images/projects/custom-cad-3d-printed-products/cad-thumb.svg",
+    heroImage: "assets/images/projects/custom-cad-3d-printed-products/cad-hero.svg",
+    heroAlt: "Graphic: Concept. Prototype. Product. Three stages are shown: a light bulb, a first and revised version of a part, and a finished award.",
     context: "Personal design and fabrication work",
 
     overview: [
@@ -464,8 +638,9 @@ window.PROJECTS = [
     tags: ["Hybrid course design", "Asynchronous instruction", "Inquiry-based labs", "Formative assessment", "Higher education"],
     featured: true,
     glyph: "lab",
-    thumbnail: "",
-    heroImage: "",
+    thumbnail: "assets/images/projects/hybrid-college-physical-science/physci-thumb.svg",
+    heroImage: "assets/images/projects/hybrid-college-physical-science/physci-hero.svg",
+    heroAlt: "Graphic: Learn. Investigate. Teach. Three stages are shown: a laptop playing a lesson, a lab flask, and a classroom board.",
     context: "Indiana University East",
 
     overview: [
@@ -497,7 +672,34 @@ window.PROJECTS = [
 
     deliverables: [],
 
-    outcomes: { placeholder: "Results and outcomes have not been added yet." },
+    outcomes: {
+      text: [
+        "For Lab 6, an in-person graham cracker model of plate tectonics, I built an interactive virtual version of the same activity. Students who were absent for the lab used it to complete the activity, and students who were present used it as supplemental material to connect the cracker model to what happens on the real Earth."
+      ],
+      placeholder: "Other results and outcomes have not been added yet."
+    },
+
+    /* A virtual version of an in-person lab, used by absent and present students. */
+    simulations: [
+      {
+        id: "plate-boundaries",
+        title: "Graham Cracker Plates vs. the Real Earth",
+        description: "A virtual version of the graham cracker plate tectonics lab. Students pick a plate boundary, move the plates with a slider or the play button, and watch the graham cracker model side by side with a cross-section of the real Earth. Students who missed the lab used it to complete the activity, and students who were present used it to connect what they saw in the model to what happens on Earth.",
+        objectives: [
+          "Describe what happens at divergent, transform, and convergent plate boundaries",
+          "Compare a physical model with the Earth process it represents",
+          "Explain how earthquakes, mountains, trenches, and volcanoes form at plate boundaries",
+          "Name a real-world example of each type of boundary"
+        ],
+        technology: ["HTML", "CSS", "JavaScript", "SVG animation", "AI-assisted development"],
+        role: "I designed this for Lab 6 in my hybrid physical science course at Indiana University East and built it with AI-assisted development.",
+        path: "simulations/plate-boundaries/index.html",
+        screenshots: [
+          { src: "assets/images/projects/interactive-science-simulations/plate-boundaries.jpg", alt: "The subduction view, with a fruit roll-up sliding under a graham cracker beside a cross-section of an oceanic plate sinking under a continent" }
+        ],
+        source: ""
+      }
+    ],
 
     gallery: [
       { title: "Sample course modules", items: [] },
@@ -517,8 +719,9 @@ window.PROJECTS = [
     tags: ["CO₂ laser", "Technical training", "Equipment safety", "Vector & raster workflows", "Competency assessment"],
     featured: true,
     glyph: "laser",
-    thumbnail: "",
-    heroImage: "",
+    thumbnail: "assets/images/projects/laser-cutter-training/laser-thumb.svg",
+    heroImage: "assets/images/projects/laser-cutter-training/laser-hero.svg",
+    heroAlt: "Graphic: Safety. Practice. Mastery. Three stages are shown: a warning sign, a laser head cutting a sheet, and a badge with a check mark.",
     context: "Technical training for specialized equipment",
 
     overview: [

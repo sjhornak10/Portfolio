@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 640" font-family="'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1680" height="640" fill="#1F2124"/>
+  <g font-size="80" font-weight="600" fill="#F4F4F2" letter-spacing="-2">
+    <text x="100" y="232">Learn.</text>
+    <text x="100" y="326">Investigate.</text>
+    <text x="100" y="420" fill="#F08A4B">Teach.</text>
+  </g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="762" y="304" width="152" height="102" rx="4"/><path d="M742 430h192l-14-24h-164z"/></g>
+  <g fill="none" stroke="#F08A4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M826 334l30 21-30 21z" fill="#F08A4B"/></g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M1124 298h56M1132 298v50l-48 84a10 10 0 0 0 9 15h118a10 10 0 0 0 9-15l-48-84v-50"/><path d="M1102 402h100" stroke="#B8B7B2"/></g>
+  <g fill="none" stroke="#F08A4B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="1140" cy="422" r="7" fill="#F08A4B"/><circle cx="1168" cy="414" r="5" fill="#F08A4B"/><circle cx="1156" cy="434" r="4" fill="#F08A4B"/></g>
+  <g fill="none" stroke="#F4F4F2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="1366" y="296" width="180" height="120" rx="3"/><path d="M1400 416l-20 36M1512 416l20 36"/><path d="M1392 330h60M1392 356h44M1392 382h52" stroke="#B8B7B2"/></g>
+  <g fill="none" stroke="#F08A4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="1502" cy="356" r="7" fill="#F08A4B"/><ellipse cx="1502" cy="356" rx="30" ry="12"/><ellipse cx="1502" cy="356" rx="30" ry="12" transform="rotate(60 1502 356)"/></g>
+  <g fill="none" stroke="#96958F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M988 380h52M1028 368l12 12-12 12"/>
+    <path d="M1276 380h52M1316 368l12 12-12 12"/>
+  </g>
+  <g text-anchor="middle">
+    <g font-size="34" font-weight="600" fill="#F4F4F2"><text x="838" y="546">Learn</text><text x="1152" y="546">Investigate</text><text x="1456" y="546">Teach</text></g>
+    <g font-size="23" fill="#B8B7B2"><text x="838" y="582">Asynchronous online</text><text x="1152" y="582">Inquiry-based labs</text><text x="1456" y="582">For future teachers</text></g>
+  </g>
+</svg>

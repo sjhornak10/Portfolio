@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script>try{document.documentElement.setAttribute("data-theme",localStorage.getItem("theme")==="dark"?"dark":"light")}catch(e){document.documentElement.setAttribute("data-theme","light")}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Graham cracker plates vs. the real Earth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#1F2A33; --muted:#56636E; --line:#CDD5DC;
+  --accent:#1F6F8B; --accent-ink:#FFFFFF; --model-bg:#F7F5F0; --earth-bg:#DCEAF4;
+  --warn:#B4441C;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#151B20; --surface:#1E262D; --ink:#E7ECEF; --muted:#9DAAB4; --line:#33404A;
+    --accent:#62B6D3; --accent-ink:#0F1A20; --model-bg:#E9E5DC; --earth-bg:#CCDDEA; --warn:#F08A5D;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#151B20; --surface:#1E262D; --ink:#E7ECEF; --muted:#9DAAB4; --line:#33404A;
+  --accent:#62B6D3; --accent-ink:#0F1A20; --model-bg:#E9E5DC; --earth-bg:#CCDDEA; --warn:#F08A5D;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:1rem;line-height:1.5}
+main{max-width:1180px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-family:"Bricolage Grotesque","Atkinson Hyperlegible",system-ui,sans-serif;font-weight:800;
+  font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.1;margin:0 0 .5rem;letter-spacing:-.01em}
+.intro{max-width:68ch;color:var(--muted);margin:0 0 1.25rem}
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.tab{font:inherit;font-weight:700;border:2px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:.55rem .9rem;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.panels{display:grid;grid-template-columns:1fr;gap:1rem}
+@media (min-width:780px){.panels{grid-template-columns:1fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.75rem 1rem .5rem}
+.panel-head h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:600;font-size:1.15rem;margin:0}
+.view{font-size:.85rem;color:var(--muted)}
+.stage{display:block;width:100%;height:auto;max-width:100%}
+.stage.model{background:var(--model-bg)}
+.stage.earth{background:var(--earth-bg)}
+.caption{padding:.75rem 1rem 1rem;margin:0;border-top:1px solid var(--line)}
+.controls{margin-top:1rem;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:1rem;display:grid;gap:.75rem;grid-template-columns:1fr}
+@media (min-width:780px){.controls{grid-template-columns:1fr auto}}
+.slider-wrap label{display:block;font-weight:700;margin-bottom:.25rem}
+input[type=range]{width:100%;accent-color:var(--accent);height:2rem}
+.btns{display:flex;gap:.5rem;align-items:end}
+.btn{font:inherit;font-weight:700;padding:.6rem 1.1rem;border-radius:10px;cursor:pointer;
+  border:2px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.btn.secondary{background:transparent;color:var(--accent)}
+.stress{grid-column:1/-1;display:none;align-items:center;gap:.75rem}
+.stress.on{display:flex}
+.meter{flex:1;height:14px;border-radius:7px;background:var(--line);overflow:hidden}
+.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,#E9B949,#D9534F);transition:width .08s linear}
+.quake{font-weight:700;color:var(--warn);min-width:7.5em}
+.notes{display:grid;gap:1rem;margin-top:1rem;grid-template-columns:1fr}
+@media (min-width:780px){.notes{grid-template-columns:1fr 1fr}}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem}
+.note h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:600;font-size:1.05rem;margin:0 0 .35rem}
+.note p{margin:0}
+.footnote{margin-top:1rem;color:var(--muted);max-width:75ch}
+svg .lbl{font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-size:12px;fill:#1F2A33}
+svg .lbl.light{fill:#FFFFFF}
+svg .arrow{stroke:#1F2A33;stroke-width:2.5;fill:none;marker-end:url(#ah)}
+svg .arrowfill{fill:#1F2A33}
+.shake{animation:shake .45s linear}
+@keyframes shake{
+  0%,100%{transform:translate(0,0)} 15%{transform:translate(-5px,2px)} 30%{transform:translate(5px,-2px)}
+  45%{transform:translate(-4px,1px)} 60%{transform:translate(4px,-1px)} 75%{transform:translate(-2px,1px)}}
+@media (prefers-reduced-motion: reduce){.shake{animation:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<main>
+  <h1>Graham cracker plates vs. the real Earth</h1>
+  <p class="intro">Lab 6, Activity 1 (virtual). Choose a boundary, move the plates with the slider or the play button, and compare what happens to the model with what happens on Earth. Record your observations in your lab table.</p>
+
+  <div class="tabs" role="tablist" aria-label="Plate boundary type">
+    <button class="tab" role="tab" data-mode="divergent" aria-selected="true">Divergent</button>
+    <button class="tab" role="tab" data-mode="transform" aria-selected="false">Transform</button>
+    <button class="tab" role="tab" data-mode="collision" aria-selected="false">Convergent: continent–continent</button>
+    <button class="tab" role="tab" data-mode="subduction" aria-selected="false">Convergent: subduction</button>
+  </div>
+
+  <div class="panels">
+    <section class="panel" aria-labelledby="mh">
+      <div class="panel-head"><h2 id="mh">Graham cracker model</h2><span class="view" id="mview">Side view</span></div>
+      <svg class="stage model" id="model" viewBox="0 0 400 260" role="img" aria-label="Graham cracker model"></svg>
+      <p class="caption" id="mcap"></p>
+    </section>
+    <section class="panel" aria-labelledby="eh">
+      <div class="panel-head"><h2 id="eh">The real Earth</h2><span class="view" id="eview">Cross-section</span></div>
+      <svg class="stage earth" id="earth" viewBox="0 0 400 260" role="img" aria-label="Real Earth cross-section"></svg>
+      <p class="caption" id="ecap"></p>
+    </section>
+  </div>
+
+  <div class="controls">
+    <div class="slider-wrap">
+      <label for="t" id="tlabel">Pull the plates apart</label>
+      <input type="range" id="t" min="0" max="1000" value="0">
+    </div>
+    <div class="btns">
+      <button class="btn" id="play">Play</button>
+      <button class="btn secondary" id="reset">Reset</button>
+    </div>
+    <div class="stress" id="stress">
+      <span>Stress along the edge</span>
+      <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+      <span class="quake" id="quake" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><h3>Watch for</h3><p id="watch"></p></div>
+    <div class="note"><h3>Real example</h3><p id="example"></p></div>
+  </div>
+  <p class="footnote">About the frosting: Earth’s mantle is not liquid. The asthenosphere is solid rock that is hot enough to flow extremely slowly, like very stiff putty, over millions of years.</p>
+</main>
+
+<script>
+(function(){
+const C={cracker:"#C98A4B",crackerEdge:"#9E6530",hole:"#8F5A27",wet:"#8C5527",frost:"#FFF7E8",frostEdge:"#E3D3B4",
+  roll:"#C2304A",rollDark:"#951F36",water:"#5E9FCF",waterDeep:"#3F7FB0",ocrust:"#4A4F57",olith:"#6A5D57",
+  newcrust:"#7B828C",newcrust2:"#5C636C",ccrust:"#B88E6E",ccrust2:"#A37A5B",clith:"#8A6B5B",
+  asth1:"#E0884A",asth2:"#B9482A",magma:"#FFA23A",magmaHot:"#FFD25A",snow:"#FFFFFF",mtn:"#8F6E54",
+  land1:"#D8C496",land2:"#A9C795",road:"#5A5F66"};
+const DATA={
+  divergent:{view:["Side view","Cross-section"],slider:"Pull the plates apart",
+    mcap:"Pulling the crackers apart opens a gap, and frosting squeezes up to fill it.",
+    ecap:"Plates pull apart at a mid-ocean ridge. Hot mantle rock rises, partly melts, and cools into new oceanic crust, so the youngest seafloor is right at the ridge.",
+    watch:"What fills the gap as the plates separate? Where would you find the youngest crust?",
+    example:"The Mid-Atlantic Ridge, running down the middle of the Atlantic Ocean. On land, the East African Rift is a divergent boundary that is splitting a continent."},
+  transform:{view:["View from above","Map view from above"],slider:"Slide the plates past each other",
+    mcap:"The cracker edges grab each other, then suddenly slip and crumble.",
+    ecap:"Plates slide past each other. Friction locks the fault while stress builds in the rock until it slips all at once, causing an earthquake. Crust is neither created nor destroyed here.",
+    watch:"Watch the stress meter. What happens just before the crackers slip? What happens to the road and fence on Earth?",
+    example:"The San Andreas Fault in California, where the Pacific Plate slides past the North American Plate."},
+  collision:{view:["Side view","Cross-section"],slider:"Push the plates together",
+    mcap:"The softened cracker edges collide, crumple, and pile upward.",
+    ecap:"Two continents collide. Continental crust is too thick and buoyant to sink, so it crumples and stacks into high mountains with deep roots.",
+    watch:"When the edges meet, does the cracker go up, down, or under? How does the crust change below the mountains?",
+    example:"The Himalayas, which formed (and are still rising) as India collides with Asia."},
+  subduction:{view:["Side view","Cross-section"],slider:"Push the plates together",
+    mcap:"The thin fruit roll-up slides underneath the thicker cracker.",
+    ecap:"A dense oceanic plate sinks beneath a continent, forming a deep trench. Water released from the sinking plate helps melt the mantle above it, and the magma rises to build a chain of volcanoes.",
+    watch:"Which plate goes underneath? What forms where the plates meet, and what forms on the plate above?",
+    example:"The Andes Mountains in South America, and the Cascade volcanoes (including Mount St. Helens) in the Pacific Northwest."}
+};
+let mode="divergent", t=0, slip=0, lastQuake=0, playing=null;
+const $=id=>document.getElementById(id);
+const model=$("model"), earth=$("earth"), slider=$("t");
+const defs=`<defs>
+ <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowfill"/></marker>
+ <linearGradient id="asth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.asth1}"/><stop offset="1" stop-color="${C.asth2}"/></linearGradient>
+ <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C.water}"/><stop offset="1" stop-color="${C.waterDeep}"/></linearGradient>
+ <radialGradient id="glow"><stop offset="0" stop-color="${C.magmaHot}"/><stop offset="1" stop-color="${C.magma}" stop-opacity="0"/></radialGradient>
+</defs>`;
+const f=n=>Math.round(n*10)/10;
+function arrow(x1,y1,x2,y2){return `<path class="arrow" d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}"/>`}
+function label(x,y,txt,cls="",anchor="middle"){return `<text class="lbl ${cls}" x="${f(x)}" y="${f(y)}" text-anchor="${anchor}">${txt}</text>`}
+function frosting(y=170,h=62){return `<rect x="12" y="${y}" width="376" height="${h}" rx="18" fill="${C.frost}" stroke="${C.frostEdge}" stroke-width="2"/>`}
+function crackerSide(x1,x2,y=146,h=24,wetSide=null){
+  let s=`<rect x="${f(x1)}" y="${y}" width="${f(x2-x1)}" height="${h}" rx="3" fill="${C.cracker}" stroke="${C.crackerEdge}" stroke-width="1.5"/>`;
+  if(wetSide==="right") s+=`<rect x="${f(x2-18)}" y="${y}" width="18" height="${h}" rx="3" fill="${C.wet}" opacity=".75"/>`;
+  if(wetSide==="left") s+=`<rect x="${f(x1)}" y="${y}" width="18" height="${h}" rx="3" fill="${C.wet}" opacity=".75"/>`;
+  for(let x=x1+14;x<x2-8;x+=22) s+=`<circle cx="${f(x)}" cy="${y+h/2}" r="2" fill="${C.hole}"/>`;
+  return s;
+}
+function crackerTop(x,y,w,h){
+  let s=`<rect x="${f(x)}" y="${f(y)}" width="${w}" height="${h}" rx="4" fill="${C.cracker}" stroke="${C.crackerEdge}" stroke-width="1.5"/>`;
+  s+=`<line x1="${f(x+w/2)}" y1="${f(y+6)}" x2="${f(x+w/2)}" y2="${f(y+h-6)}" stroke="${C.crackerEdge}" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  for(let i=0;i<2;i++)for(let r=0;r<3;r++)for(let c=0;c<3;c++){
+    const cx=x+(i*w/2)+w/8+c*w/8, cy=y+h/4+r*h/4;
+    s+=`<circle cx="${f(cx)}" cy="${f(cy)}" r="2" fill="${C.hole}"/>`;}
+  return s;
+}
+
+/* ---------- DIVERGENT ---------- */
+function divergent(t){
+  const s=t*40;
+  let m=defs+frosting();
+  const mound=10+18*t;
+  if(s>0.5) m+=`<path d="M${f(198-s)} 171 Q200 ${f(170-mound)} ${f(202+s)} 171 Z" fill="${C.frost}" stroke="${C.frostEdge}" stroke-width="1.5"/>`;
+  m+=crackerSide(58-s,198-s)+crackerSide(202+s,342+s);
+  m+=arrow(150-s,128,105-s,128)+arrow(250+s,128,295+s,128);
+  m+=label(128-s,118,"cracker")+label(272+s,118,"cracker")+label(200,250,"frosting");
+  if(t>.2) m+=label(200,f(160-mound-12),"frosting rises");
+  model.innerHTML=m;
+
+  let e=defs;
+  e+=`<rect x="0" y="0" width="400" height="92" fill="url(#sea)"/>`;
+  e+=`<rect x="0" y="122" width="400" height="138" fill="url(#asth)"/>`;
+  // new crust stripes between plates
+  const L=196-s, R=204+s;
+  e+=`<rect x="${f(L)}" y="92" width="${f(R-L)}" height="30" fill="${C.newcrust}"/>`;
+  for(let k=0;k*8<s;k++){ if(k%2===0){
+    e+=`<rect x="${f(196-(k+1)*8)}" y="92" width="8" height="14" fill="${C.newcrust2}"/>`;
+    e+=`<rect x="${f(204+k*8)}" y="92" width="8" height="14" fill="${C.newcrust2}"/>`;}}
+  // plates
+  e+=`<rect x="-5" y="92" width="${f(L+5)}" height="14" fill="${C.ocrust}"/><rect x="-5" y="106" width="${f(L+5)}" height="16" fill="${C.olith}"/>`;
+  e+=`<rect x="${f(R)}" y="92" width="${f(405-R)}" height="14" fill="${C.ocrust}"/><rect x="${f(R)}" y="106" width="${f(405-R)}" height="16" fill="${C.olith}"/>`;
+  // ridge bump
+  const rh=6+10*t;
+  e+=`<path d="M${f(L-30)} 92 Q200 ${f(92-rh*2)} ${f(R+30)} 92 Z" fill="${C.newcrust}"/>`;
+  // magma rising
+  e+=`<path d="M175 260 L200 ${f(100-rh)} L225 260 Z" fill="${C.magma}" opacity=".85"/>`;
+  e+=`<ellipse cx="200" cy="${f(112-rh/2)}" rx="${f(10+s/3)}" ry="10" fill="url(#glow)"/>`;
+  // convection hints
+  e+=`<path class="arrow" d="M170 230 Q120 200 90 150"/><path class="arrow" d="M230 230 Q280 200 310 150"/>`;
+  e+=arrow(140,48,95,48)+arrow(260,48,305,48);
+  e+=label(200,22,"mid-ocean ridge","light")+label(60,60,"ocean","light");
+  e+=label(70,250,"asthenosphere","light","start")+label(110,118,"plate","light");
+  if(t>.25) e+=label(200,f(92-2*rh-8),"new crust","light");
+  earth.innerHTML=e;
+}
+
+/* ---------- TRANSFORM ---------- */
+function transform(t){
+  const off=slip*70, edge=t*70-off; // elastic bend before slip
+  let m=defs+`<rect x="12" y="14" width="376" height="232" rx="22" fill="${C.frost}" stroke="${C.frostEdge}" stroke-width="2"/>`;
+  m+=`<g>`+crackerTop(70+off,30,200,95)+crackerTop(130-off,133,200,95)+`</g>`;
+  // crumbs along the edge, more with each slip
+  const n=Math.floor(slip*14);
+  for(let i=0;i<n;i++){const x=80+((i*53)%240), y=128+((i*7)%6)-2; m+=`<circle cx="${x}" cy="${y}" r="${1.5+(i%3)}" fill="${C.crackerEdge}"/>`;}
+  // stress hint: edges bend
+  if(edge>2) m+=`<path d="M${f(170+off)} 126 q30 ${f(-edge/4)} 60 0" stroke="#D9534F" stroke-width="2" fill="none" stroke-dasharray="3 3"/>`;
+  m+=arrow(150,22,215,22)+arrow(250,240,185,240);
+  model.innerHTML=m;
+
+  let e=defs;
+  e+=`<rect x="0" y="0" width="400" height="130" fill="${C.land1}"/><rect x="0" y="130" width="400" height="130" fill="${C.land2}"/>`;
+  // stream offset
+  e+=`<path d="M${f(80+off)} 0 C${f(95+off)} 50 ${f(65+off)} 90 ${f(80+off)} 130" stroke="${C.water}" stroke-width="5" fill="none"/>`;
+  e+=`<path d="M${f(80-off)} 130 C${f(95-off)} 170 ${f(65-off)} 210 ${f(80-off)} 260" stroke="${C.water}" stroke-width="5" fill="none"/>`;
+  // road offset
+  e+=`<rect x="${f(195+off)}" y="0" width="22" height="130" fill="${C.road}"/><line x1="${f(206+off)}" y1="0" x2="${f(206+off)}" y2="130" stroke="#F2C94C" stroke-width="2" stroke-dasharray="8 7"/>`;
+  e+=`<rect x="${f(195-off)}" y="130" width="22" height="130" fill="${C.road}"/><line x1="${f(206-off)}" y1="130" x2="${f(206-off)}" y2="260" stroke="#F2C94C" stroke-width="2" stroke-dasharray="8 7"/>`;
+  // fence
+  e+=`<line x1="${f(300+off)}" y1="70" x2="${f(300+off)}" y2="130" stroke="#6B4F35" stroke-width="2.5"/><line x1="${f(300-off)}" y1="130" x2="${f(300-off)}" y2="195" stroke="#6B4F35" stroke-width="2.5"/>`;
+  for(let y=74;y<130;y+=11) e+=`<line x1="${f(294+off)}" y1="${y}" x2="${f(306+off)}" y2="${y}" stroke="#6B4F35" stroke-width="2.5"/>`;
+  for(let y=136;y<195;y+=11) e+=`<line x1="${f(294-off)}" y1="${y}" x2="${f(306-off)}" y2="${y}" stroke="#6B4F35" stroke-width="2.5"/>`;
+  // fault
+  e+=`<line x1="0" y1="130" x2="400" y2="130" stroke="#7A1E1E" stroke-width="3" stroke-dasharray="10 5"/>`;
+  e+=`<rect x="250" y="8" width="144" height="22" rx="4" fill="#FFFFFF" opacity=".85"/><rect x="262" y="230" width="104" height="22" rx="4" fill="#FFFFFF" opacity=".85"/>`;
+  e+=`<text class="lbl" style="fill:#1F2A33" x="322" y="24" text-anchor="middle">North American Plate</text><text class="lbl" style="fill:#1F2A33" x="314" y="246" text-anchor="middle">Pacific Plate</text>`;
+  e+=`<rect x="8" y="136" width="124" height="20" rx="4" fill="#FFFFFF" opacity=".85"/><text class="lbl" style="fill:#1F2A33" x="14" y="150">San Andreas Fault</text>`;
+  e+=`<g style="--ink:#1F2A33">`+arrow(320,48,385,48)+arrow(120,215,50,215)+`</g>`;
+  earth.innerHTML=e;
+  const stress=Math.max(0,Math.min(1,(t-slip)/0.2));
+  $("meterfill").style.width=(stress*100)+"%";
+}
+function updateTransform(newT){
+  if(newT<slip) slip=newT;
+  if(newT-slip>=0.2){ slip=newT; quake(); }
+}
+function quake(){
+  lastQuake=Date.now();
+  $("quake").textContent="Earthquake!";
+  for(const el of [model,earth]){el.classList.remove("shake"); void el.getBBox(); el.classList.add("shake");}
+  setTimeout(()=>{ if(Date.now()-lastQuake>=1100) $("quake").textContent=""; },1200);
+}
+
+/* ---------- CONTINENT-CONTINENT ---------- */
+function collision(t){
+  const a=Math.min(t/0.45,1)*25, c=Math.max(0,(t-0.45)/0.55);
+  const w=8+c*34, H=c*46, d=c*10;
+  const Ls=40+a+c*28, Re=360-a-c*28;
+  let m=defs+frosting();
+  if(c===0){
+    m+=crackerSide(Ls,175+a,146,24,"right")+crackerSide(225-a,Re,146,24,"left");
+  } else {
+    // crumpled single shape
+    const pts=[[Ls,170],[Ls,146],[200-w,146]];
+    const steps=6;
+    for(let i=1;i<steps;i++){const x=200-w+(i/steps)*w, h=H*(i/steps)*(i%2?1:0.7); pts.push([x,146-h]);}
+    pts.push([200,146-H]);
+    for(let i=steps-1;i>0;i--){const x=200+w-(i/steps)*w, h=H*(i/steps)*(i%2?0.75:1); pts.push([x,146-h]);}
+    pts.push([200+w,146],[Re,146],[Re,170],[200+w*0.6,170],[200,170+d],[200-w*0.6,170]);
+    m+=`<polygon points="${pts.map(p=>f(p[0])+","+f(p[1])).join(" ")}" fill="${C.cracker}" stroke="${C.crackerEdge}" stroke-width="1.5"/>`;
+    m+=`<polygon points="${pts.slice(2,2+steps*2+1).map(p=>f(p[0])+","+f(p[1])).join(" ")} ${f(200+w)},170 ${f(200-w)},170" fill="${C.wet}" opacity=".55"/>`;
+    for(let x=Ls+14;x<200-w-6;x+=22) m+=`<circle cx="${f(x)}" cy="158" r="2" fill="${C.hole}"/>`;
+    for(let x=Re-14;x>200+w+6;x-=22) m+=`<circle cx="${f(x)}" cy="158" r="2" fill="${C.hole}"/>`;
+  }
+  m+=arrow(Ls+30,126,Ls+70,126)+arrow(Re-30,126,Re-70,126);
+  if(c===0) m+=label(Ls+55,116,"softened edge →"); m+=label(200,250,"frosting");
+  if(c>.3) m+=label(200,f(130-H),"crumpled edges");
+  model.innerHTML=m;
+
+  let e=defs;
+  const ca=a, cc=c;
+  const L2=40+ca+cc*30, R2=360-ca-cc*30;
+  const W2=10+cc*60, H2=cc*72, root=cc*45;
+  e+=`<rect x="0" y="175" width="400" height="85" fill="url(#asth)"/>`;
+  // lithospheric mantle
+  e+=`<rect x="-5" y="150" width="${f(cc>0?405:175+ca+5)}" height="25" fill="${C.clith}"/>`;
+  if(cc===0) e+=`<rect x="${f(225-ca)}" y="150" width="${f(180+ca)}" height="25" fill="${C.clith}"/>`;
+  if(cc===0){
+    e+=`<rect x="${f(170+ca)}" y="110" width="${f(60-2*ca)}" height="30" fill="url(#sea)"/><rect x="${f(170+ca)}" y="140" width="${f(60-2*ca)}" height="10" fill="${C.ocrust}"/><rect x="${f(170+ca)}" y="150" width="${f(60-2*ca)}" height="25" fill="${C.olith}"/>`;
+    e+=`<rect x="-5" y="95" width="${f(180+ca)}" height="55" fill="${C.ccrust}"/><rect x="${f(225-ca)}" y="95" width="${f(180+ca)}" height="55" fill="${C.ccrust}"/>`;
+    for(const y of [110,128]){ e+=`<line x1="0" y1="${y}" x2="${f(175+ca)}" y2="${y}" stroke="${C.ccrust2}" stroke-width="3"/><line x1="${f(225-ca)}" y1="${y}" x2="400" y2="${y}" stroke="${C.ccrust2}" stroke-width="3"/>`;}
+  } else {
+    const top=`M-5 95 L${f(200-W2-20)} 95 L${f(200-W2*0.7)} ${f(95-H2*0.55)} L${f(200-W2*0.35)} ${f(95-H2*0.8)} L${f(200-W2*0.15)} ${f(95-H2*0.7)} L200 ${f(95-H2)} L${f(200+W2*0.25)} ${f(95-H2*0.75)} L${f(200+W2*0.5)} ${f(95-H2*0.85)} L${f(200+W2*0.8)} ${f(95-H2*0.45)} L${f(200+W2+20)} 95 L405 95`;
+    e+=`<path d="${top} L405 150 L${f(200+W2+30)} 150 Q200 ${f(150+root*2)} ${f(200-W2-30)} 150 L-5 150 Z" fill="${C.ccrust}"/>`;
+    // folded layers
+    for(const [y,k] of [[110,0.6],[128,0.9]]){
+      e+=`<path d="M0 ${y} L${f(200-W2-20)} ${y} Q${f(200-W2*0.5)} ${f(y-H2*k)} 200 ${f(y-H2*k*0.6+root*0.4)} Q${f(200+W2*0.5)} ${f(y-H2*k)} ${f(200+W2+20)} ${y} L400 ${y}" stroke="${C.ccrust2}" stroke-width="3" fill="none"/>`;}
+    // snow caps
+    if(H2>30) e+=`<path d="M${f(200-8)} ${f(95-H2+10)} L200 ${f(95-H2)} L${f(200+8)} ${f(95-H2+10)} Z M${f(200+W2*0.5-6)} ${f(95-H2*0.85+8)} L${f(200+W2*0.5)} ${f(95-H2*0.85)} L${f(200+W2*0.5+6)} ${f(95-H2*0.85+8)} Z" fill="${C.snow}"/>`;
+  }
+  e+=arrow(40,70,90,70)+arrow(360,70,310,70);
+  e+=label(60,88,"India","","middle")+label(340,88,"Asia");
+  e+=label(80,245,"asthenosphere","light","start");
+  if(cc>.35) e+=label(200,f(85-H2),"Himalayas")+label(200,f(150+root+16),"deep root","light");
+  e+=`<text class="lbl" style="fill:#2B2118" x="90" y="124" text-anchor="middle">continental crust</text>`;
+  earth.innerHTML=e;
+}
+
+/* ---------- SUBDUCTION ---------- */
+function subduction(t){
+  const a=t*15, cl=210-a, front=170+t*150;
+  let m=defs+frosting();
+  // roll-up
+  if(front<=cl){
+    m+=`<rect x="${f(front-140)}" y="162" width="140" height="8" rx="2" fill="${C.roll}" stroke="${C.rollDark}"/>`;
+  } else {
+    const under=front-cl, ang=0.42;
+    const ex=cl+under*0.92, ey=170+under*ang;
+    m+=`<path d="M${f(front-140)} 162 L${f(cl)} 162 Q${f(cl+12)} 163 ${f(cl+under*0.3)} ${f(170+under*ang*0.3)} L${f(ex)} ${f(ey)} L${f(ex-3)} ${f(ey+8)} L${f(cl+under*0.3-4)} ${f(178+under*ang*0.3)} Q${f(cl+6)} 171 ${f(cl)} 170 L${f(front-140)} 170 Z" fill="${C.roll}" stroke="${C.rollDark}" opacity=".95"/>`;
+  }
+  m+=crackerSide(cl,cl+160,146,24);
+  m+=arrow(60,140,110,140)+arrow(cl+150,128,cl+110,128);
+  m+=label(Math.max(80,Math.min(front-80,cl-45)),154,"fruit roll-up")+label(cl+80,136,"cracker")+label(200,250,"frosting");
+  model.innerHTML=m;
+
+  let e=defs;
+  const tx=210, mv=t*36;
+  e+=`<rect x="0" y="130" width="400" height="130" fill="url(#asth)"/>`;
+  e+=`<rect x="0" y="80" width="${tx+20}" height="36" fill="url(#sea)"/>`;
+  // oceanic plate horizontal + slab
+  const slabLen=40+t*120, ang=0.62;
+  const sx=tx, sy=116;
+  const ex=sx+slabLen*Math.cos(ang), ey=sy+slabLen*Math.sin(ang);
+  e+=`<path d="M-5 108 L${sx} 108 L${f(ex)} ${f(ey-8*1)} L${f(ex-14)} ${f(ey+14)} L${sx-10} 132 L-5 132 Z" fill="${C.ocrust}"/>`;
+  e+=`<path d="M-5 120 L${sx-4} 120 L${f(ex-6)} ${f(ey+3)} L${f(ex-14)} ${f(ey+14)} L${sx-10} 132 L-5 132 Z" fill="${C.olith}"/>`;
+  // motion ticks
+  for(let x=(mv%30)-30;x<sx-10;x+=30) e+=`<line x1="${f(x)}" y1="110" x2="${f(x)}" y2="118" stroke="#9AA1AA" stroke-width="2"/>`;
+  // continental plate
+  e+=`<path d="M${tx-6} 66 L405 66 L405 140 L${tx+60} 140 Q${tx+20} 128 ${tx-6} 110 Z" fill="${C.ccrust}"/>`;
+  e+=`<line x1="${tx+40}" y1="96" x2="400" y2="96" stroke="${C.ccrust2}" stroke-width="3"/>`;
+  // volcano
+  const vH=Math.max(0,(t-0.45)/0.55)*40, vx=318, gy=66;
+  if(vH>0){
+    e+=`<path d="M${vx-40} ${gy} L${vx-6} ${f(gy-vH)} L${vx+6} ${f(gy-vH)} L${vx+40} ${gy} Z" fill="${C.mtn}"/>`;
+    // magma path
+    e+=`<path d="M${vx-30} ${f(Math.min(ey,215))} Q${vx-10} 150 ${vx} ${f(gy-vH)}" stroke="${C.magma}" stroke-width="5" fill="none" opacity=".9"/>`;
+    for(let i=0;i<3;i++) e+=`<circle cx="${vx-24+i*9}" cy="${f(190-i*30)}" r="${4-i*0.6}" fill="${C.magma}"/>`;
+    if(t>0.78) e+=`<circle cx="${vx}" cy="${f(gy-8-vH)}" r="14" fill="url(#glow)"/><path d="M${vx-4} ${f(gy-2-vH)} q-6 -16 4 -28 q8 10 2 28" fill="#9A9AA0" opacity=".7"/>`;
+  }
+  e+=arrow(40,96,90,96)+arrow(395,54,355,54);
+  e+=label(tx-8,74,"trench","","end")+`<path d="M${tx-4} 76 L${tx-4} 104" stroke="#1F2A33" stroke-width="1" stroke-dasharray="3 3"/>`;
+  e+=label(70,145,"oceanic plate","light");
+  e+=`<text class="lbl" style="fill:#2B2118" x="350" y="118" text-anchor="middle">continent</text>`;
+  if(t>.5) e+=label(f(ex-30),f(ey+30),"sinking plate","light");
+  if(vH>10) e+=label(vx-22,f(gy-vH+6),"volcano","","end");
+  e+=label(20,250,"asthenosphere","light","start");
+  earth.innerHTML=e;
+}
+
+const DRAW={divergent,transform,collision,subduction};
+function render(){ DRAW[mode](t); if(mode!=='transform'){ const inner=model.innerHTML.replace(defs,''); model.innerHTML=defs+'<g transform="translate(0,-28)">'+inner+'</g>'; } }
+function setMode(m){
+  mode=m; stop(); t=0; slip=0; slider.value=0; $("quake").textContent="";
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.mode===m?"true":"false"));
+  const d=DATA[m];
+  $("mview").textContent=d.view[0]; $("eview").textContent=d.view[1];
+  $("tlabel").textContent=d.slider; $("mcap").textContent=d.mcap; $("ecap").textContent=d.ecap;
+  $("watch").textContent=d.watch; $("example").textContent=d.example;
+  $("stress").classList.toggle("on",m==="transform");
+  $("meterfill").style.width="0%";
+  render();
+}
+function setT(v){
+  if(mode==="transform") updateTransform(v);
+  t=v; render();
+}
+slider.addEventListener("input",()=>{ stop(); setT(slider.value/1000); });
+function stop(){ if(playing){cancelAnimationFrame(playing); playing=null; $("play").textContent="Play";} }
+$("play").addEventListener("click",()=>{
+  if(playing){stop();return;}
+  if(t>=0.999){ t=0; slip=0; }
+  $("play").textContent="Pause";
+  let last=performance.now();
+  const dur= mode==="transform"?7000:4500;
+  const step=now=>{
+    const dt=now-last; last=now;
+    const v=Math.min(1,t+dt/dur);
+    setT(v); slider.value=Math.round(v*1000);
+    if(v<1) playing=requestAnimationFrame(step); else stop();
+  };
+  playing=requestAnimationFrame(step);
+});
+$("reset").addEventListener("click",()=>setMode(mode));
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+document.querySelector(".tabs").addEventListener("keydown",e=>{
+  const tabs=[...document.querySelectorAll(".tab")]; const i=tabs.indexOf(document.activeElement);
+  if(i<0) return;
+  if(e.key==="ArrowRight"||e.key==="ArrowLeft"){ e.preventDefault();
+    const j=(i+(e.key==="ArrowRight"?1:tabs.length-1))%tabs.length; tabs[j].focus(); setMode(tabs[j].dataset.mode);}
+});
+setMode("divergent");
+})();
+</script>
+</body>
+</html>
